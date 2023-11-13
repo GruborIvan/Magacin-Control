@@ -233,52 +233,6 @@ namespace CSS_MagacinControl_App
             }
         }
 
-        private void ScanButton_Click(object sender, RoutedEventArgs e)
-        {
-            string barCode = BarCodeTextBox.Text;
-            string brojFakture = _identTrackViewModel.FaktureState.First().BrojFakture;
-
-            if (!_identTrackViewModel.BarcodeToIdentDictionary.ContainsKey(barCode))
-            {
-                dialogHandler.GetWrongBarCodeDialog();
-                BarCodeTextBox.Text = String.Empty;
-                return;
-            }
-
-            string identName = _identTrackViewModel.BarcodeToIdentDictionary[barCode];
-
-            // CHANGE SCAN LOGIC
-            // GET IDENT NAME BY BARCODE.
-            var scannedIdent = _identTrackViewModel.IdentState
-                                .Where(x => x.NazivIdenta == identName)
-                                .Where(x => x.BrojFakture == brojFakture)
-                                .FirstOrDefault();
-
-            if (scannedIdent != null)
-            {
-                // Provera da li je spakovano vise nego sto je na fakturi.
-                if ((scannedIdent.KolicinaSaFakture == scannedIdent.PripremljenaKolicina) && scannedIdent.Razlika == 0)
-                {
-                    dialogHandler.GetPrimljenaKolicina_VecaOd_Fakturisane();
-                    BarCodeTextBox.Text = String.Empty;
-                    return;
-                }
-
-                scannedIdent.PripremljenaKolicina = scannedIdent.PripremljenaKolicina + 1;
-                scannedIdent.Razlika = scannedIdent.KolicinaSaFakture - scannedIdent.PripremljenaKolicina;
-
-                FaktureIdenti.ItemsSource = null;
-                FaktureIdenti.ItemsSource = _identTrackViewModel.IdentState;
-            }
-            else
-            {
-                // Show dialog for Wrong Barcode scanned.
-                dialogHandler.GetWrongBarCodeDialog();
-            }
-
-            BarCodeTextBox.Text = String.Empty;
-        }
-
         private void ChangeCurrentState(FaktureIdentiViewModel faktureIdentiViewModel)
         {
             FaktureGrid.ItemsSource = faktureIdentiViewModel.FaktureViewModel;
@@ -368,6 +322,53 @@ namespace CSS_MagacinControl_App
         {
             base.OnClosed(e);
             Application.Current.Shutdown();
+        }
+
+        private void BarCodeTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string barCode = BarCodeTextBox.Text;
+                string brojFakture = _identTrackViewModel.FaktureState.First().BrojFakture;
+
+                if (!_identTrackViewModel.BarcodeToIdentDictionary.ContainsKey(barCode))
+                {
+                    dialogHandler.GetWrongBarCodeDialog();
+                    BarCodeTextBox.Text = String.Empty;
+                    return;
+                }
+
+                string identName = _identTrackViewModel.BarcodeToIdentDictionary[barCode];
+
+                var scannedIdent = _identTrackViewModel.IdentState
+                                    .Where(x => x.NazivIdenta == identName)
+                                    .Where(x => x.BrojFakture == brojFakture)
+                                    .FirstOrDefault();
+
+                if (scannedIdent != null)
+                {
+                    // Provera da li je spakovano vise nego sto je na fakturi.
+                    if ((scannedIdent.KolicinaSaFakture == scannedIdent.PripremljenaKolicina) && scannedIdent.Razlika == 0)
+                    {
+                        dialogHandler.GetPrimljenaKolicina_VecaOd_Fakturisane();
+                        BarCodeTextBox.Text = String.Empty;
+                        return;
+                    }
+
+                    scannedIdent.PripremljenaKolicina = scannedIdent.PripremljenaKolicina + 1;
+                    scannedIdent.Razlika = scannedIdent.KolicinaSaFakture - scannedIdent.PripremljenaKolicina;
+
+                    FaktureIdenti.ItemsSource = null;
+                    FaktureIdenti.ItemsSource = _identTrackViewModel.IdentState;
+                }
+                else
+                {
+                    // Show dialog for Wrong Barcode scanned.
+                    dialogHandler.GetWrongBarCodeDialog();
+                }
+
+                BarCodeTextBox.Text = String.Empty;
+            }
         }
     }
 }

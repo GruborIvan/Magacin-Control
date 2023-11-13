@@ -19,7 +19,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <DataGrid Name="FaktureGrid" Height="175" HorizontalAlignment="Left" MouseDoubleClick="FaktureGrid_MouseDoubleClick" IsReadOnly="True" ColumnWidth="*" Margin="308,30,0,0" VerticalAlignment="Top" Width="767" Grid.ColumnSpan="2" CanUserResizeColumns="False" CanUserResizeRows="False" />
+                <DataGrid Name="FaktureGrid" Height="175" HorizontalAlignment="Left" MouseDoubleClick="FaktureGrid_MouseDoubleClick" IsReadOnly="True" ColumnWidth="*" Margin="308,35,0,0" VerticalAlignment="Top" Width="767" Grid.ColumnSpan="2" CanUserResizeColumns="False" CanUserResizeRows="False" />
 
                 <DataGrid ItemsSource="{Binding Path=_identTrackViewModel.IdentState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="235" HorizontalAlignment="Left" ColumnWidth="*" IsReadOnly="True" Margin="309,298,0,0" 
                       Name="FaktureIdenti" VerticalAlignment="Top" Width="768" Grid.RowSpan="2" CanUserResizeColumns="False" CanUserResizeRows="False"
@@ -33,7 +33,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Button Name="LogoutButton" Content="Izloguj se" Background="#f54b31" HorizontalAlignment="Left" Margin="24,-24,0,0" VerticalAlignment="Top" Height="34" Width="90" Click="LogoutButton_Click" RenderTransformOrigin="0.466,0.17" Grid.Column="1">
+                <Button Name="LogoutButton" Content="Izloguj se" Background="#f54b31" HorizontalAlignment="Left" Margin="24,-27,0,0" VerticalAlignment="Top" Height="34" Width="90" Click="LogoutButton_Click" RenderTransformOrigin="0.466,0.17" Grid.Column="1">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>
@@ -41,7 +41,7 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Name="AdminPreferencesButton" Background="#e6bfad" Content="Administrator" HorizontalAlignment="Left" Margin="871,-24,0,0" VerticalAlignment="Top" Height="34" Width="90" Click="AdminPreferencesButton_Click">
+                <Button Name="AdminPreferencesButton" Background="#e6bfad" Content="Administrator" HorizontalAlignment="Left" Margin="871,-27,0,0" VerticalAlignment="Top" Height="34" Width="90" Click="AdminPreferencesButton_Click">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>
@@ -49,15 +49,14 @@
                     </Button.Resources>
                 </Button>
 
-                <Label Content="Fakture:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Margin="308,4,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
+                <Label Content="Fakture:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Margin="308,10,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
                 <Label Content="Identi:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,272,561,0" VerticalAlignment="Top" Height="26" Width="91"/>
 
-                <Canvas Name="ScanCanvas" Margin="16,324,676,38">
-                    <TextBox Name="BarCodeTextBox" FontSize="14" Height="28" Width="162" TextWrapping="Wrap" Text="" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="10"/>
-                    <Label Content="Unos bar koda:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Height="27" Width="128" Canvas.Left="10" Canvas.Top="3"/>
-                    <Button x:Name="ScanButton" Content="Skeniraj" Canvas.Left="180" Canvas.Top="37" Height="26" Width="69" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ScanButton_Click"/>
+                <Canvas Name="ScanCanvas" Margin="16,324,676,45">
+                    <TextBox Name="BarCodeTextBox" FontSize="22" Height="35" Width="198" TextWrapping="Wrap" TextAlignment="Center" Text="" Canvas.Top="35" KeyDown="BarCodeTextBox_KeyDown" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="28"/>
+                    <Label Content="Unos bar koda:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Height="27" Width="128" Canvas.Left="63" Canvas.Top="3"/>
                 </Canvas>
-                <Canvas Name="SnimiEndCanvas" Margin="16,433,673,0" Grid.RowSpan="2">
+                <Canvas Name="SnimiEndCanvas" Margin="16,423,673,10" Grid.RowSpan="2">
                     <Button Name="SnimiZaNaknadniZavrsetakButton" Background="#e6bfad" FontSize="13" Content="Snimi za naknadni završetak" Canvas.Left="32" HorizontalAlignment="Center" VerticalAlignment="Center" Height="36" Width="182" Canvas.Top="10" Click="SnimiZaNaknadniZavrsetakButton_Click">
                         <Button.Resources>
                             <Style TargetType="Border">
@@ -74,7 +73,7 @@
                     </Button>
                 </Canvas>
 
-                <Canvas x:Name="FiltersCanvas" Margin="16,58,676,163" Background="#71bbd4">
+                <Canvas x:Name="FiltersCanvas" Margin="16,51,676,183" Background="#71bbd4">
                     <Label Content="Filters:" FontWeight="Bold" FontSize="16" Height="37" Width="68" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="100"/>
                     <Label Content="Broj fakture:" Height="26" Width="75" HorizontalAlignment="Center" Canvas.Top="42" VerticalAlignment="Top" Canvas.Left="10"/>
                     <ComboBox x:Name="BrojeviFaktureComboBox" Width="126" SelectionChanged="BrojeviFaktureComboBox_SelectionChanged" Height="22" HorizontalAlignment="Center" Canvas.Left="131" Canvas.Top="44" VerticalAlignment="Top"/>
@@ -82,14 +81,14 @@
                     <DatePicker x:Name="DatePickerFilter" Width="126" Height="24" HorizontalAlignment="Left" Canvas.Left="131" Canvas.Top="83" VerticalAlignment="Top"/>
                     <Label Content="Status:" Height="26" Width="45" HorizontalAlignment="Left" Canvas.Left="13" Canvas.Top="127" VerticalAlignment="Top"/>
                     <ComboBox x:Name="StatusComboBox" Width="126" Height="22" HorizontalAlignment="Left" Canvas.Left="131" Canvas.Top="127" VerticalAlignment="Top"/>
-                    <Button x:Name="FilterButton" Background="#e6bfad" Content="Filtriraj" FontSize="13" Height="35" Width="100" Click="FilterButton_Click" HorizontalAlignment="Left" Canvas.Left="13" Canvas.Top="194" VerticalAlignment="Top">
+                    <Button x:Name="FilterButton" Background="#e6bfad" Content="Filtriraj" FontSize="13" Height="36" Width="100" Click="FilterButton_Click" HorizontalAlignment="Center" Canvas.Left="13" Canvas.Top="176" VerticalAlignment="Top">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="5"/>
                             </Style>
                         </Button.Resources>
                     </Button>
-                    <Button x:Name="RemoveFilterButton" Background="#f54b31" Content="Ukloni filter" FontSize="13" Height="35" Width="100" Click="RemoveFilterButton_Click" HorizontalAlignment="Center" Canvas.Left="144" Canvas.Top="194" VerticalAlignment="Top">
+                    <Button x:Name="RemoveFilterButton" Background="#f54b31" Content="Ukloni filter" FontSize="13" Height="35" Width="100" Click="RemoveFilterButton_Click" HorizontalAlignment="Center" Canvas.Left="144" Canvas.Top="177" VerticalAlignment="Top">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="5"/>
@@ -97,7 +96,7 @@
                         </Button.Resources>
                     </Button>
                 </Canvas>
-                <Canvas Margin="309,205,28,184" Grid.ColumnSpan="2">
+                <Canvas Margin="308,213,29,176" Grid.ColumnSpan="2">
                     <Label Content="Ukupno faktura: " Height="26" Width="96" HorizontalAlignment="Left" Canvas.Top="2" VerticalAlignment="Top"/>
                     <Label x:Name="UkupnoFakturaLabel" Content="" Height="26" Width="63" HorizontalAlignment="Left" Canvas.Left="101" Canvas.Top="2" VerticalAlignment="Top"/>
                     <Button x:Name="IzvozUCsvButton" Content="Izvezi u .Csv" FontSize="14" Background="#e6bfad" Canvas.Left="637" Canvas.Top="38" HorizontalAlignment="Center" VerticalAlignment="Top" Height="37" Width="120">
@@ -108,7 +107,7 @@
                         </Button.Resources>
                     </Button>
                 </Canvas>
-                <Canvas Margin="16,-32,699,415">
+                <Canvas Margin="16,-40,699,428">
                     <Label Content="Učitavanje podataka iz fajla" Height="26" Width="154" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <TextBox TextWrapping="Wrap" Text="" Width="174" Height="34" x:Name="FileNameTextBox" HorizontalAlignment="Center" Canvas.Top="26" VerticalAlignment="Top"/>
                     <Button x:Name="UcitajButton" Content="Učitaj" Background="#e6bfad" Height="34" Width="90" Click="UcitajButton_Click" HorizontalAlignment="Left" Canvas.Left="179" Canvas.Top="26" VerticalAlignment="Center">

@@ -12,17 +12,15 @@ namespace CSS_MagacinControl_App.Models.DboModels
 
         [ForeignKey("RobaZaPakovanje")]
         public string BrojFakture { get; set; } 
-        public string IdentBarkod { get; set; }
         public string NazivIdenta { get; set; }
         public int KolicinaSaFakture { get; set; }
         public int PrimljenaKolicina { get; set; }
 
-        public IdentDbo(Guid id, string sifraIdenta, string brojFakture, string identBarkod, string nazivIdenta, int kolicinaSaFakture, int primljenaKolicina)
+        public IdentDbo(Guid id, string sifraIdenta, string brojFakture, string nazivIdenta, int kolicinaSaFakture, int primljenaKolicina)
         {
             Id = id;
             SifraIdenta = sifraIdenta;
             BrojFakture = brojFakture;
-            IdentBarkod = identBarkod;
             NazivIdenta = nazivIdenta;
             KolicinaSaFakture = kolicinaSaFakture;
             PrimljenaKolicina = primljenaKolicina;

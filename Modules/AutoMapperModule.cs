@@ -23,7 +23,7 @@ namespace CSS_MagacinControl_App.Modules
 
                 cfg.CreateMap<IdentiViewModel, IdentDbo>()
                     .ForMember(x => x.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
-                    .ForMember(x => x.IdentBarkod, opt => opt.MapFrom(src => src.Barkod))
+                    //.ForMember(x => x.IdentBarkod, opt => opt.MapFrom(src => src.Barkod))
                     .ForMember(x => x.PrimljenaKolicina, opt => opt.MapFrom(src => src.PripremljenaKolicina));
 
                 cfg.CreateMap<FakturaDbo, FaktureViewModel>()
