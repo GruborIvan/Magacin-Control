@@ -12,9 +12,9 @@
                 <Label Content="Login" HorizontalAlignment="Center" FontSize="32" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Height="54" Width="140"/>
                 <Canvas Margin="1,69,-1,-17">
                     <Label Content="Username:" FontSize="18" Height="35" Canvas.Left="143" Canvas.Top="49" VerticalAlignment="Top" Width="114"/>
-                    <TextBox x:Name="UserBox" TextWrapping="Wrap" Height="33" Canvas.Left="117" Canvas.Top="89" VerticalAlignment="Top" Width="166" HorizontalAlignment="Center"/>
-                    <Label Content="Password:" FontSize="18" Height="30" Canvas.Left="152" Canvas.Top="169" VerticalAlignment="Center" Width="96" HorizontalAlignment="Left"/>
-                    <PasswordBox x:Name="PassBox"  Height="33" Foreground="DarkBlue" Canvas.Left="117" Canvas.Top="204" VerticalAlignment="Center" Width="166" HorizontalAlignment="Center" />
+                    <TextBox x:Name="UserBox" FontSize="22" TextWrapping="NoWrap" Height="33" Canvas.Left="109" Canvas.Top="89" VerticalAlignment="Center" Width="182" HorizontalAlignment="Left"/>
+                    <Label Content="Password:" FontSize="18" Height="30" Canvas.Left="152" Canvas.Top="169" VerticalAlignment="Center" Width="96" HorizontalAlignment="Center"/>
+                    <PasswordBox x:Name="PassBox" FontSize="22" Height="33" Foreground="DarkBlue" Canvas.Left="109" Canvas.Top="204" VerticalAlignment="Center" Width="182" HorizontalAlignment="Left" />
                     <Button x:Name="LoginButton" Background="#e6bfad" IsDefault="True" Content="Log In" FontSize="16" Height="41" Click="LoginButton_Click" Width="114" HorizontalAlignment="Left" Canvas.Left="143" Canvas.Top="297" VerticalAlignment="Top">
                         <Button.Resources>
                             <Style TargetType="Border">

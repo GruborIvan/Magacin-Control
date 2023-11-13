@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CSS_MagacinControl_App.Interfaces;
+using CSS_MagacinControl_App.Migrations.DbInitialize;
 using CSS_MagacinControl_App.Models.DboModels;
 using CSS_MagacinControl_App.Modules;
 using CSS_MagacinControl_App.Parsers;
@@ -32,7 +33,7 @@ namespace CSS_MagacinControl_App
                         .AddJsonFile("appsettings.json")
                         .Build();
 
-                    var connectionString = configuration.GetConnectionString("MagacinDbConnectionString");
+                    var connectionString = configuration.GetConnectionString("MagacinDbConnectionStringLocal");
 
                     services.AddDbContext<AppDbContext>(
                         options => options.UseSqlServer(connectionString),
@@ -62,8 +63,11 @@ namespace CSS_MagacinControl_App
         {
             await AppHost!.StartAsync();
 
+            // Make sure that the database is up to date with migrations.
+            // Seed initial admin user to the system.
             var dbCtx = new AppDbContext();
             dbCtx.Database.Migrate();
+            DbInitializer.Initialize(dbCtx);
 
             var startupForm = AppHost.Services.GetRequiredService<AuthenticationWindow>();
             startupForm.Show();

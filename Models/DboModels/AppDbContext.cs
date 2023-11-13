@@ -24,7 +24,7 @@ namespace CSS_MagacinControl_App.Models.DboModels
                     .AddJsonFile("appsettings.json")
                     .Build();
 
-                var connectionString = configuration.GetConnectionString("MagacinDbConnectionString");
+                var connectionString = configuration.GetConnectionString("MagacinDbConnectionStringLocal");
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
