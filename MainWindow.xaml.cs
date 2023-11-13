@@ -30,7 +30,6 @@ namespace CSS_MagacinControl_App
 
         private readonly string _nonSelectedDropdownValue = "--";
 
-        private bool _isEditMode = false;
         private bool _isAdminWindowOpen = false;
         private bool _shouldExecuteBrojFakture = true;
 
@@ -234,7 +233,7 @@ namespace CSS_MagacinControl_App
             }
         }
 
-        private async void ScanButton_Click(object sender, RoutedEventArgs e)
+        private void ScanButton_Click(object sender, RoutedEventArgs e)
         {
             string barCode = BarCodeTextBox.Text;
             string brojFakture = _identTrackViewModel.FaktureState.First().BrojFakture;
@@ -268,8 +267,6 @@ namespace CSS_MagacinControl_App
                 scannedIdent.PripremljenaKolicina = scannedIdent.PripremljenaKolicina + 1;
                 scannedIdent.Razlika = scannedIdent.KolicinaSaFakture - scannedIdent.PripremljenaKolicina;
 
-                // Pozeleneti red u kojem je skenirani ident.
-                await Highlight_Changed_Row(scannedIdent.SifraIdenta, _identTrackViewModel.IdentState.IndexOf(scannedIdent));
                 FaktureIdenti.ItemsSource = null;
                 FaktureIdenti.ItemsSource = _identTrackViewModel.IdentState;
             }
@@ -303,7 +300,6 @@ namespace CSS_MagacinControl_App
             {
                 if (faktureIdentiViewModel.FaktureViewModel[0].Status == "U radu")
                 {
-                    _isEditMode = true;
                     ScanCanvas.Visibility = Visibility.Visible;
                     SnimiEndCanvas.Visibility = Visibility.Visible;
                     BarCodeTextBox.Focus();
@@ -311,7 +307,6 @@ namespace CSS_MagacinControl_App
                 }
             }
 
-            _isEditMode = false;
             ScanCanvas.Visibility = Visibility.Hidden;
             SnimiEndCanvas.Visibility = Visibility.Hidden;
         }
@@ -325,19 +320,6 @@ namespace CSS_MagacinControl_App
 
             // Setup broj faktura label
             UkupnoFakturaLabel.Content = fakture.Count;
-        }
-
-        private async Task Highlight_Changed_Row(string sifraIdenta, int index)
-        {
-            //FaktureIdenti.CellStyle
-
-            //Style style = (Style)FaktureIdenti.Resources["RowBackgroundGreen"];
-            //FaktureIdenti.Columns[index].CellStyle = style;
-
-            //await Task.Delay(1000);
-
-            //Style styleBack = (Style)FaktureIdenti.Resources["RowBackgroundWhite"];
-            //FaktureIdenti.Columns[index].CellStyle = styleBack;
         }
 
         private async void ZavrsetakButton_Click(object sender, RoutedEventArgs e)

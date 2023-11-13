@@ -32,7 +32,7 @@ namespace CSS_MagacinControl_App
                         .AddJsonFile("appsettings.json")
                         .Build();
 
-                    var connectionString = configuration.GetConnectionString("AndroidDatalabConnectionString");
+                    var connectionString = configuration.GetConnectionString("MagacinDbConnectionString");
 
                     services.AddDbContext<AppDbContext>(
                         options => options.UseSqlServer(connectionString),

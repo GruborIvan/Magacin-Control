@@ -22,26 +22,7 @@ namespace CSS_MagacinControl_App.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CSS_MagacinControl_App.Models.DboModels.IdentBarkodDbo", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("BarkodIdenta")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NazivIdenta")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("_css_IdentBarKod", (string)null);
-                });
-
-            modelBuilder.Entity("CSS_MagacinControl_App.Models.DboModels.RobaZaPakovanjeDbo", b =>
+            modelBuilder.Entity("CSS_MagacinControl_App.Models.DboModels.FakturaDbo", b =>
                 {
                     b.Property<string>("BrojFakture")
                         .HasColumnType("nvarchar(450)");
@@ -66,7 +47,26 @@ namespace CSS_MagacinControl_App.Migrations
                     b.ToTable("_css_RobaZaPakovanje_hd", (string)null);
                 });
 
-            modelBuilder.Entity("CSS_MagacinControl_App.Models.DboModels.RobaZaPakovanjeItemDbo", b =>
+            modelBuilder.Entity("CSS_MagacinControl_App.Models.DboModels.IdentBarkodDbo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BarkodIdenta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NazivIdenta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("_css_IdentBarKod", (string)null);
+                });
+
+            modelBuilder.Entity("CSS_MagacinControl_App.Models.DboModels.IdentDbo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -131,9 +131,9 @@ namespace CSS_MagacinControl_App.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("CSS_MagacinControl_App.Models.DboModels.RobaZaPakovanjeItemDbo", b =>
+            modelBuilder.Entity("CSS_MagacinControl_App.Models.DboModels.IdentDbo", b =>
                 {
-                    b.HasOne("CSS_MagacinControl_App.Models.DboModels.RobaZaPakovanjeDbo", "RobaZaPakovanje")
+                    b.HasOne("CSS_MagacinControl_App.Models.DboModels.FakturaDbo", "RobaZaPakovanje")
                         .WithMany("RobaZaPakovanjeItems")
                         .HasForeignKey("BrojFakture")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -142,7 +142,7 @@ namespace CSS_MagacinControl_App.Migrations
                     b.Navigation("RobaZaPakovanje");
                 });
 
-            modelBuilder.Entity("CSS_MagacinControl_App.Models.DboModels.RobaZaPakovanjeDbo", b =>
+            modelBuilder.Entity("CSS_MagacinControl_App.Models.DboModels.FakturaDbo", b =>
                 {
                     b.Navigation("RobaZaPakovanjeItems");
                 });

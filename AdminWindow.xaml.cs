@@ -10,7 +10,6 @@ namespace CSS_MagacinControl_App
     /// </summary>
     public partial class AdminWindow : Window
     {
-        private string _loggedInUsername;
         public bool IsOpen;
 
         private readonly IAuthenticationRepository _authenticationRepository;
