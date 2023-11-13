@@ -1,0 +1,40 @@
+﻿<Window x:Class="CSS_MagacinControl_App.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Closing="Window_Closing"
+        Title="AdminWindow" Height="700" Width="1000">
+    <Border Background="LightBlue">
+        <Viewbox>
+            <Grid Height="214" Width="391">
+                <StackPanel Margin="0,0,0,178" Background="LightGray"/>
+                <Label Content="Admin preferences" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" FontSize="18"/>
+                <Image HorizontalAlignment="Left" Height="32" Margin="350,2,0,0" VerticalAlignment="Top" Width="34" Source="/images/UserImage.jpg" />
+                <Label Name="UsernameLabel" FontWeight="Bold" Content="" FontSize="10" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="261,14,0,0" VerticalAlignment="Top" Width="89" Height="22"/>
+                <Label Content="Logged in user:" HorizontalAlignment="Left" Margin="285,0,0,0" VerticalAlignment="Top" Height="21" Width="65" FontSize="8"/>
+                <Canvas Margin="0,36,0,0">
+
+                    <DataGrid x:Name="UsersGrid" TextBlock.TextAlignment="Center" ItemsSource="{Binding Path = userModelState}" AutoGenerateColumns="False" Height="140" Width="353" Canvas.Left="19" Canvas.Top="47" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Username" Width="7*" Binding="{Binding Username}"/>
+                            <DataGridTextColumn Header="Ime" Width="7*" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="Prezime" Width="7*" Binding="{Binding Surname}"/>
+                            <DataGridTextColumn Header="Admin" Width="5*" Binding="{Binding IsAdmin}"/>
+                            <DataGridTextColumn Header="Password" Width="8*" Binding="{Binding Password}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Button x:Name="DodajNovogKorisnikaButton" Content="Dodaj novog korisnika" Canvas.Left="19" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center" Width="113" FontSize="10" Background="#e6bfad" Height="22" Click="DodajNovogKorisnikaButton_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </Canvas>
+            </Grid>
+        </Viewbox>
+    </Border>
+</Window>
