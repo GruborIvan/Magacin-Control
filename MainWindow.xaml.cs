@@ -284,9 +284,10 @@ namespace CSS_MagacinControl_App
                 return;
             }
 
-            var selectedFaktura = _identTrackViewModel.FaktureState.First();
-            selectedFaktura.Status = "Završeno";
-            await _robaService.SaveFakturaAndItemsAsync(_identTrackViewModel);
+            var selectedFaktura = _identTrackViewModel.FaktureState.First(); // Get selected faktura
+            await _robaService.SaveFakturaAndItemsAsync(_identTrackViewModel); // Save faktura and items to database.
+
+            await _robaService.ChangeFakturaStatusToDoneAsync(selectedFaktura.BrojFakture); // Change status of faktura to 'Done'.
 
             // REFRESH THE VIEW..
             BrojeviFaktureComboBox.SelectedItem = selectedFaktura.BrojFakture;

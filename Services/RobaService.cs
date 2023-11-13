@@ -85,5 +85,10 @@ namespace CSS_MagacinControl_App.Services
                 await _robaRepository.UpdateIdentiAsync(dataModel.IdentState);
             }
         }
+
+        public async Task ChangeFakturaStatusToDoneAsync(string brojFakture)
+        {
+            await _robaRepository.ChangeFakturaStatusToDoneAsync(brojFakture);
+        }
     }
 }

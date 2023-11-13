@@ -18,6 +18,6 @@ namespace CSS_MagacinControl_App.Interfaces
         Task SaveIdentBarcodeRelationAsync(List<IdentBarkodDbo> identBarkodRelations);
         Task<bool> CheckIfFakturaAlreadyExistsAsync(string brojFakture);
         Task<string> GetNazivIdentaByBarcodeAsync(string enteredBarcode);
-        //Task SaveIdent(IdentiViewModel identi);
+        Task ChangeFakturaStatusToDoneAsync(string brojFakture);
     }
 }

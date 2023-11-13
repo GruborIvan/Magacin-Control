@@ -159,5 +159,14 @@ namespace CSS_MagacinControl_App.Repository
 
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task ChangeFakturaStatusToDoneAsync(string brojFakture)
+        {
+            var checkFaktura = await _dbContext.RobaZaPakovanje.FindAsync(brojFakture);
+            checkFaktura.StatusFakture = "Završeno";
+
+            _dbContext.Entry<FakturaDbo>(checkFaktura).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace CSS_MagacinControl_App.Interfaces
         Task<bool> CheckIfFakturaExists(string brojFakture);
         Task<string> GetNazivIdentaByBarcodeAsync(string enteredBarcode);
         Task SaveFakturaAndItemsAsync(IdentTrackViewModel dataModel);
+        Task ChangeFakturaStatusToDoneAsync(string brojFakture);
     }
 }

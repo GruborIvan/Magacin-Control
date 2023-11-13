@@ -99,7 +99,7 @@
                 <Canvas Margin="308,213,29,176" Grid.ColumnSpan="2">
                     <Label Content="Ukupno faktura: " Height="26" Width="96" HorizontalAlignment="Left" Canvas.Top="2" VerticalAlignment="Top"/>
                     <Label x:Name="UkupnoFakturaLabel" Content="" Height="26" Width="63" HorizontalAlignment="Left" Canvas.Left="101" Canvas.Top="2" VerticalAlignment="Top"/>
-                    <Button x:Name="IzvozUCsvButton" Content="Izvezi u .Csv" FontSize="14" Background="#e6bfad" Canvas.Left="637" Canvas.Top="38" HorizontalAlignment="Center" VerticalAlignment="Top" Height="37" Width="120">
+                    <Button x:Name="IzvozUCsvButton" Content="Izvezi u .Csv" FontSize="14" Background="#e6bfad" Canvas.Left="637" Canvas.Top="25" HorizontalAlignment="Center" VerticalAlignment="Top" Height="37" Width="120">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="5"/>
