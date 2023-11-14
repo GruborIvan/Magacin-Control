@@ -8,5 +8,6 @@ namespace CSS_MagacinControl_App.Interfaces
     {
         Task<FaktureIdentiViewModel> ReadDataFromCsvFilesAsync(List<string> fileNames);
         List<string> ValidateFileNames(List<string> fileNames);
+        void PackFaktureToCsvFile(FaktureViewModel faktura);
     }
 }

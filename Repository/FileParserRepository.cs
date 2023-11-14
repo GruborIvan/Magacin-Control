@@ -4,7 +4,6 @@ using CSS_MagacinControl_App.Models.CsvModels;
 using CSS_MagacinControl_App.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -112,6 +111,14 @@ namespace CSS_MagacinControl_App.Repository
             );
 
             return date.ToString("dd/MM/yyyy");
+        }
+
+        public void CreateOutputDirectoryIfNotExists(string outputPath)
+        {
+            if (!Directory.Exists(outputPath))
+            {
+                Directory.CreateDirectory(outputPath);
+            }
         }
     }
 }

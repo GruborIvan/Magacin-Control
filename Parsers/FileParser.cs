@@ -2,6 +2,8 @@
 using CSS_MagacinControl_App.Interfaces;
 using CSS_MagacinControl_App.Models.CsvModels;
 using CSS_MagacinControl_App.ViewModels;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +17,8 @@ namespace CSS_MagacinControl_App.Parsers
         private readonly string _identiFileExtension = "_code.txt";
         private readonly string _kolicineFileExtension = "_item.txt";
         private DialogHandler _dialogHandler;
+
+        private readonly string baseFilePath = @"C:\OTPREME\";
 
         private readonly IFileParserRepository _fileParserRepository;
 
@@ -84,8 +88,8 @@ namespace CSS_MagacinControl_App.Parsers
             if (fileNames.Count == 1)
             {
                 var fileName = fileNames[0];
-                
-                var baseFileName = fileName.Substring(0,fileName.Length - 4);
+
+                var baseFileName = fileName.Substring(0, fileName.Length - 4);
 
                 string itemFileName = baseFileName + _kolicineFileExtension;
                 string codeFileName = baseFileName + _identiFileExtension;
@@ -99,6 +103,25 @@ namespace CSS_MagacinControl_App.Parsers
             {
                 _dialogHandler.GetWrongFileNumberSelectDialog(fileNames.Count);
                 return null;
+            }
+        }
+
+        public void PackFaktureToCsvFile(FaktureViewModel faktura)
+        {
+            string fakturaText = $"{faktura.BrojFakture}\t{faktura.DatumFakture}\t{faktura.SifraKupca}\t{faktura.NazivKupca}";
+
+            _fileParserRepository.CreateOutputDirectoryIfNotExists(baseFilePath);
+
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                Filter = "Text Files(*.txt)|*",
+                FileName = $"{faktura.BrojFakture}_export.txt",
+                InitialDirectory = baseFilePath
+            };
+
+            if ((bool)dialog.ShowDialog())
+            {
+                File.WriteAllText(dialog.FileName, fakturaText);
             }
         }
     }

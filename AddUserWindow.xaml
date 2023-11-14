@@ -3,25 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CSS_MagacinControl_App"
         mc:Ignorable="d"
         Title="AddUser" Height="520" Width="500"
         Background="LightBlue">
     <Border>
         <Viewbox>
             <Grid Height="358" Width="400">
-
                 <Label Content="Dodavanje novog korisnika" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Height="41" Width="260"/>
-                <Label Content="Username:" HorizontalAlignment="Left" Margin="70,60,0,0" VerticalAlignment="Top" Height="26" Width="108"/>
+                <Label Content="Korisničko ime:" HorizontalAlignment="Left" Margin="70,60,0,0" VerticalAlignment="Top" Height="26" Width="108"/>
                 <Label Content="Ime:" HorizontalAlignment="Left" Margin="70,106,0,0" VerticalAlignment="Top" Height="27" Width="85"/>
                 <Label Content="Prezime:" HorizontalAlignment="Left" Margin="70,155,0,0" VerticalAlignment="Top" Height="27" Width="80"/>
-                <Label Content="Admin:" HorizontalAlignment="Left" Margin="70,196,0,0" VerticalAlignment="Top" Height="26" Width="81"/>
-                <Label Content="Password:" HorizontalAlignment="Left" Margin="70,239,0,0" VerticalAlignment="Top" Height="27" Width="108"/>
-                <Label Content="Confirm password:" HorizontalAlignment="Left" Margin="70,280,0,0" VerticalAlignment="Top" Height="27" Width="118"/>
+                <Label Content="Da li je korisnik Admin:" HorizontalAlignment="Left" Margin="70,199,0,0" VerticalAlignment="Top" Height="26" Width="140"/>
+                <Label Content="Lozinka:" HorizontalAlignment="Left" Margin="70,239,0,0" VerticalAlignment="Top" Height="27" Width="108"/>
+                <Label Content="Potvrda lozinke:" HorizontalAlignment="Left" Margin="70,280,0,0" VerticalAlignment="Top" Height="27" Width="118"/>
                 <TextBox HorizontalAlignment="Left" Margin="200,62,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="22"/>
                 <TextBox HorizontalAlignment="Left" Margin="200,108,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
                 <TextBox HorizontalAlignment="Left" Margin="200,155,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
-                <CheckBox Content="" HorizontalAlignment="Left" Margin="200,202,0,0" VerticalAlignment="Top"/>
+                <CheckBox Content="" HorizontalAlignment="Left" Margin="260,202,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.398,0.592"/>
                 <TextBox HorizontalAlignment="Left" Margin="200,243,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
                 <TextBox HorizontalAlignment="Left" Margin="200,282,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
 
@@ -33,7 +31,6 @@
                     </Button.Resources>
                 </Button>
             </Grid>
-
         </Viewbox>
     </Border>
 </Window>

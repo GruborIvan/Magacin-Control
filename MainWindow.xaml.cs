@@ -259,6 +259,7 @@ namespace CSS_MagacinControl_App
                 {
                     ScanCanvas.Visibility = Visibility.Visible;
                     SnimiEndCanvas.Visibility = Visibility.Visible;
+                    IzvozUCsvButton.Visibility = Visibility.Visible;
                     BarCodeTextBox.Focus();
                     return;
                 }
@@ -266,6 +267,7 @@ namespace CSS_MagacinControl_App
 
             ScanCanvas.Visibility = Visibility.Hidden;
             SnimiEndCanvas.Visibility = Visibility.Hidden;
+            IzvozUCsvButton.Visibility = Visibility.Hidden;
         }
 
         private void Setup_BrojeviFakturaCombobox(List<FaktureViewModel> fakture)
@@ -373,6 +375,13 @@ namespace CSS_MagacinControl_App
 
                 BarCodeTextBox.Text = String.Empty;
             }
+        }
+
+        private void IzvozUCsvButton_Click(object sender, RoutedEventArgs e)
+        {
+            var faktura = _identTrackViewModel.FaktureState.First();
+
+            _fileParser.PackFaktureToCsvFile(faktura);
         }
     }
 }

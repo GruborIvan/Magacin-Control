@@ -25,6 +25,7 @@ namespace CSS_MagacinControl_App
 
         public App()
         {
+
             AppHost = Host.CreateDefaultBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {

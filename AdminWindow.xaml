@@ -10,10 +10,10 @@
         <Viewbox>
             <Grid Height="214" Width="391">
                 <StackPanel Margin="0,0,0,178" Background="LightGray"/>
-                <Label Content="Admin preferences" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" FontSize="18"/>
+                <Label Content="Upravljanje korisničkim nalozima" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18"/>
                 <Image HorizontalAlignment="Left" Height="32" Margin="350,2,0,0" VerticalAlignment="Top" Width="34" Source="/images/UserImage.jpg" />
-                <Label Name="UsernameLabel" FontWeight="Bold" Content="" FontSize="10" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="261,14,0,0" VerticalAlignment="Top" Width="89" Height="22"/>
-                <Label Content="Logged in user:" HorizontalAlignment="Left" Margin="285,0,0,0" VerticalAlignment="Top" Height="21" Width="65" FontSize="8"/>
+                <Label Name="UsernameLabel" FontWeight="Bold" Content="" FontSize="10" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="270,14,0,0" VerticalAlignment="Top" Width="80" Height="22"/>
+                <Label Content="Ulogovani korisnik:" HorizontalAlignment="Left" Margin="275,0,0,0" VerticalAlignment="Top" Height="21" Width="75" FontSize="8"/>
                 <Canvas Margin="0,36,0,0">
 
                     <DataGrid x:Name="UsersGrid" TextBlock.TextAlignment="Center" ItemsSource="{Binding Path = userModelState}" AutoGenerateColumns="False" Height="140" Width="353" Canvas.Left="19" Canvas.Top="47" HorizontalAlignment="Center" VerticalAlignment="Top">
