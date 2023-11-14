@@ -61,19 +61,22 @@ namespace CSS_MagacinControl_App
             // Setup admin button visibility.
             Adjust_AdminButtonVisibility();
 
-            // Setup BrojeviFakture dropdown.
-            var brojeviFaktura = new List<string>() { _nonSelectedDropdownValue };
-            brojeviFaktura.AddRange(await _robaService.GetBrojeviFaktureAsync());
-
-            BrojeviFaktureComboBox.ItemsSource = brojeviFaktura;
-            BrojeviFaktureComboBox.SelectedItem = brojeviFaktura.FirstOrDefault();
-
-            // Setup broj faktura label
-            UkupnoFakturaLabel.Content = brojeviFaktura.Count();
-
             // Status filter ComboBox
             StatusComboBox.SelectedValue = _nonSelectedDropdownValue;
             StatusComboBox.ItemsSource = new List<string>() { _nonSelectedDropdownValue ,"U radu", "Završeno" };
+
+            await PullMainScreenData(); 
+        }
+
+        private async Task PullMainScreenData()
+        {
+            DatePickerFilter.SelectedDate = DateTime.UtcNow;
+            var filters = Load_SelectedFilters();
+
+            var result = await _robaService.GetFilteredFaktureAsync(filters);
+
+            Setup_BrojeviFakturaCombobox(result.FaktureViewModel);
+            ChangeCurrentState(result);
         }
 
         private async void BrojeviFaktureComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
