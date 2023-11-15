@@ -6,6 +6,11 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Title="AdminWindow" Height="700" Width="1000">
+    <Window.Resources>
+        <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
     <Border Background="LightBlue">
         <Viewbox>
             <Grid Height="214" Width="391">
@@ -16,13 +21,15 @@
                 <Label Content="Ulogovani korisnik:" HorizontalAlignment="Left" Margin="275,0,0,0" VerticalAlignment="Top" Height="21" Width="75" FontSize="8"/>
                 <Canvas Margin="0,36,0,0">
 
-                    <DataGrid x:Name="UsersGrid" TextBlock.TextAlignment="Center" ItemsSource="{Binding Path = userModelState}" AutoGenerateColumns="False" Height="140" Width="353" Canvas.Left="19" Canvas.Top="47" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <DataGrid x:Name="UsersGrid" TextBlock.TextAlignment="Center" RowEditEnding="UsersGrid_RowEditEnding" 
+                              ItemsSource="{Binding Path = userModelState}" 
+                              AutoGenerateColumns="False" CanUserAddRows="False" Height="140" Width="353" Canvas.Left="19" Canvas.Top="47" 
+                              HorizontalAlignment="Center" VerticalAlignment="Top">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Username" Width="7*" Binding="{Binding Username}"/>
-                            <DataGridTextColumn Header="Ime" Width="7*" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="Prezime" Width="7*" Binding="{Binding Surname}"/>
-                            <DataGridTextColumn Header="Admin" Width="5*" Binding="{Binding IsAdmin}"/>
-                            <DataGridTextColumn Header="Password" Width="8*" Binding="{Binding Password}"/>
+                            <DataGridTextColumn Header="Username" Width="7*" Binding="{Binding Username, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                            <DataGridTextColumn Header="Ime" Width="7*" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                            <DataGridTextColumn Header="Prezime" Width="7*" Binding="{Binding Surname, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                            <DataGridTextColumn Header="Admin" Width="4*" Binding="{Binding IsAdmin, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
                         </DataGrid.Columns>
                     </DataGrid>
 

@@ -30,7 +30,43 @@ namespace CSS_MagacinControl_App.Dialog
 
             return MessageBox.Show(
                 messageBoxText: $" Pokušaj da se dodeli isti barkod dva različitim identima! \n {errorContents}",
-                caption: "Neispravan file!",
+                caption: "Neispravan fajl!",
+                button: MessageBoxButton.OK,
+                icon: MessageBoxImage.Error,
+                defaultResult: MessageBoxResult.Yes
+            );
+        }
+
+        // Kreiranje novog korisnika - Nisu popunjena sva polja.
+        public MessageBoxResult GetNotAllFieldsFilled()
+        {
+            return MessageBox.Show(
+                messageBoxText: $" Nisu popunjena sva polja!",
+                caption: "Neuspešno dodavanje korisnika!",
+                button: MessageBoxButton.OK,
+                icon: MessageBoxImage.Error,
+                defaultResult: MessageBoxResult.Yes
+            );
+        }
+
+        // Kreiranje novog korisnika - Korisnicko ime vec zauzeto.
+        public MessageBoxResult GetUsernameAlreadyTakenDialog()
+        {
+            return MessageBox.Show(
+                messageBoxText: $" Korisničko ime već postoji u sistemu!",
+                caption: "Neuspešno dodavanje korisnika!",
+                button: MessageBoxButton.OK,
+                icon: MessageBoxImage.Error,
+                defaultResult: MessageBoxResult.Yes
+            );
+        }
+
+        // Kreiranje novog korisnika - Ne poklapaju se sifra i ponovljena sifra.
+        public MessageBoxResult GetRazliciteSifreDialog()
+        {
+            return MessageBox.Show(
+                messageBoxText: $" Lozinke se ne poklapaju!",
+                caption: "Neuspešno dodavanje korisnika!",
                 button: MessageBoxButton.OK,
                 icon: MessageBoxImage.Error,
                 defaultResult: MessageBoxResult.Yes
@@ -103,8 +139,21 @@ namespace CSS_MagacinControl_App.Dialog
         public MessageBoxResult GetLogOutDialog()
         {
             return MessageBox.Show(
-                messageBoxText: "  Are you sure that you want to Log Out?",
-                caption: "Log out",
+                messageBoxText: "  Da li ste sigurni da želite da se odjavite sa sistema?",
+                caption: "Odjava",
+                button: MessageBoxButton.YesNo,
+                icon: MessageBoxImage.Question,
+                defaultResult: MessageBoxResult.Yes
+            );
+        }
+
+
+        // Admin - Save changes to user account?
+        public MessageBoxResult GetSaveUserChangesDialog()
+        {
+            return MessageBox.Show(
+                messageBoxText: " Da li želite da sačuvate izmene korisničkog naloga?",
+                caption: "Čuvanje izmena?",
                 button: MessageBoxButton.YesNo,
                 icon: MessageBoxImage.Question,
                 defaultResult: MessageBoxResult.Yes
@@ -114,8 +163,8 @@ namespace CSS_MagacinControl_App.Dialog
         public MessageBoxResult GetFailedUsernamePassDialog()
         {
             return MessageBox.Show(
-                messageBoxText: " Login failed for user.",
-                caption: "Login failed",
+                messageBoxText: " Neuspešna prijava na sistem.",
+                caption: "Neuspešno logovanje",
                 button: MessageBoxButton.OK,
                 icon: MessageBoxImage.Warning,
                 defaultResult: MessageBoxResult.Yes

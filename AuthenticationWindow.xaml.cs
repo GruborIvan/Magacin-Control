@@ -30,7 +30,7 @@ namespace CSS_MagacinControl_App
             var pass = PassBox.Password;
             bool suceeded, isAdmin;
 
-            (suceeded, isAdmin) = await _authenticationRepository.AuthenticateToSytem(username, pass);
+            (suceeded, isAdmin) = await _authenticationRepository.AuthenticateToSytemAsync(username, pass);
 
             if (suceeded)
             {

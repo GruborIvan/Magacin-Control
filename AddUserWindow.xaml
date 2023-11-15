@@ -16,14 +16,14 @@
                 <Label Content="Da li je korisnik Admin:" HorizontalAlignment="Left" Margin="70,199,0,0" VerticalAlignment="Top" Height="26" Width="140"/>
                 <Label Content="Lozinka:" HorizontalAlignment="Left" Margin="70,239,0,0" VerticalAlignment="Top" Height="27" Width="108"/>
                 <Label Content="Potvrda lozinke:" HorizontalAlignment="Left" Margin="70,280,0,0" VerticalAlignment="Top" Height="27" Width="118"/>
-                <TextBox HorizontalAlignment="Left" Margin="200,62,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="22"/>
-                <TextBox HorizontalAlignment="Left" Margin="200,108,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
-                <TextBox HorizontalAlignment="Left" Margin="200,155,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
-                <CheckBox Content="" HorizontalAlignment="Left" Margin="260,202,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.398,0.592"/>
-                <TextBox HorizontalAlignment="Left" Margin="200,243,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
-                <TextBox HorizontalAlignment="Left" Margin="200,282,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
+                <TextBox x:Name="UsernameTextBox" HorizontalAlignment="Left" Margin="200,62,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="22"/>
+                <TextBox x:Name="ImeTextBox" HorizontalAlignment="Left" Margin="200,108,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
+                <TextBox x:Name="PrezimeTextBox" HorizontalAlignment="Left" Margin="200,155,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
+                <CheckBox x:Name="AdminCheckBox" Content="" IsChecked="{Binding IsChecked}" HorizontalAlignment="Left" Margin="260,202,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.398,0.592"/>
+                <TextBox x:Name="PasswordBox" HorizontalAlignment="Left" Margin="200,243,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
+                <TextBox x:Name="PasswordRepeatBox" HorizontalAlignment="Left" Margin="200,282,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="23"/>
 
-                <Button Content="Kreiraj korisnika" HorizontalAlignment="Left" Margin="129,331,0,0" VerticalAlignment="Top" Height="27" Width="112" Background="#e6bfad">
+                <Button x:Name="KreirajKorisnikaButton" Content="Kreiraj korisnika" HorizontalAlignment="Left" Margin="129,331,0,0" VerticalAlignment="Top" Height="27" Width="112" Background="#e6bfad" Click="KreirajKorisnikaButton_Click">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>

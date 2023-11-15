@@ -7,6 +7,11 @@
         Title="MainWindow" 
         Height="{x:Static SystemParameters.PrimaryScreenHeight}" 
         Width="{x:Static SystemParameters.PrimaryScreenWidth}">
+    <Window.Resources>
+        <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
     <Border Background="LightBlue">
         <Viewbox x:Name="MyCanvas">
             <Grid Width="1104" Margin="0,28,0,0">
@@ -19,17 +24,26 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <DataGrid Name="FaktureGrid" Height="175" HorizontalAlignment="Left" MouseDoubleClick="FaktureGrid_MouseDoubleClick" IsReadOnly="True" ColumnWidth="*" Margin="308,35,0,0" VerticalAlignment="Top" Width="767" Grid.ColumnSpan="2" CanUserResizeColumns="False" CanUserResizeRows="False" />
+                <DataGrid Name="FaktureGrid" Height="175" HorizontalAlignment="Left" MouseDoubleClick="FaktureGrid_MouseDoubleClick" IsReadOnly="True" ColumnWidth="*" Margin="308,35,0,0" VerticalAlignment="Top" Width="767" Grid.ColumnSpan="2" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Broj fakture" Width="4*" Binding="{Binding BrojFakture}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Datum fakture" Width="4*" Binding="{Binding DatumFakture}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Sifra kupca" Width="4.5*" Binding="{Binding SifraKupca}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Naziv kupca" Width="5*" Binding="{Binding NazivKupca}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Magacioner" Width="3*" Binding="{Binding Magacioner}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Status fakture" Width="3*" Binding="{Binding Status}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
 
                 <DataGrid ItemsSource="{Binding Path=_identTrackViewModel.IdentState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="235" HorizontalAlignment="Left" ColumnWidth="*" IsReadOnly="True" Margin="309,298,0,0" 
                       Name="FaktureIdenti" VerticalAlignment="Top" Width="768" Grid.RowSpan="2" CanUserResizeColumns="False" CanUserResizeRows="False"
                       AutoGenerateColumns="False" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Sifra identa" Width="3*" Binding="{Binding SifraIdenta}"/>
-                        <DataGridTextColumn Header="Naziv identa" Width="10*" Binding="{Binding NazivIdenta}"/>
-                        <DataGridTextColumn Header="Kolicina sa fakture" Width="4.5*" Binding="{Binding KolicinaSaFakture}"/>
-                        <DataGridTextColumn Header="Pripremljena kolicina" Width="5*" Binding="{Binding PripremljenaKolicina}"/>
-                        <DataGridTextColumn Header="Razlika" Width="3*" Binding="{Binding Razlika}"/>
+                        <DataGridTextColumn Header="Sifra identa" Width="3*" Binding="{Binding SifraIdenta}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Naziv identa" Width="10*" Binding="{Binding NazivIdenta}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Kolicina sa fakture" Width="4.5*" Binding="{Binding KolicinaSaFakture}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Pripremljena kolicina" Width="5*" Binding="{Binding PripremljenaKolicina}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Razlika" Width="3*" Binding="{Binding Razlika}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
                     </DataGrid.Columns>
                 </DataGrid>
 

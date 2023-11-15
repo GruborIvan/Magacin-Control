@@ -1,4 +1,5 @@
 ﻿using CSS_MagacinControl_App.ViewModels.Authentication;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,8 +10,12 @@ namespace CSS_MagacinControl_App.Interfaces
         // Return value of this function is Tuple<bool, bool>
         // First bool value indicates if authentication succeeded.
         // Second bool value indicated if authenticated user is admin.
-        Task<(bool, bool)> AuthenticateToSytem(string username, string pass);
+        Task<(bool, bool)> AuthenticateToSytemAsync(string username, string pass);
 
-        Task<List<UserModel>> GetUsersAsync(); 
+        Task<List<UserModel>> GetUsersAsync();
+        Task<bool> ValidateNewUserAsync(UserModel userModel, string repeatPassword);
+        Task AddNewUserAsync(UserModel userModel);
+        Task<UserModel> FindChangedUserAsync(List<UserModel> newState);
+        Task SaveUserChangesAsync(UserModel userModel);
     }
 }

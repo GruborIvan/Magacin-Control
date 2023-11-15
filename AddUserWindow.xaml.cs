@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSS_MagacinControl_App.Interfaces;
+using CSS_MagacinControl_App.ViewModels.Authentication;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace CSS_MagacinControl_App
 {
@@ -19,9 +10,35 @@ namespace CSS_MagacinControl_App
     /// </summary>
     public partial class AddUserWindow : Window
     {
-        public AddUserWindow()
+        private readonly IAuthenticationRepository _authenticationRepository;
+        private AdminWindow adminWindow;
+
+        public AddUserWindow(IAuthenticationRepository authenticationRepository, AdminWindow parentAdminWindow)
         {
             InitializeComponent();
+            _authenticationRepository = authenticationRepository;
+            adminWindow = parentAdminWindow;
+        }
+
+        private async void KreirajKorisnikaButton_Click(object sender, RoutedEventArgs e)
+        {
+            var korisnik = new UserModel()
+            {
+                Id = Guid.NewGuid(),
+                Username = UsernameTextBox.Text,
+                Name = ImeTextBox.Text,
+                Surname = PrezimeTextBox.Text,
+                IsAdmin = (bool)AdminCheckBox.IsChecked,
+                Password = PasswordBox.Text,
+            };
+
+            if (!await _authenticationRepository.ValidateNewUserAsync(korisnik, PasswordRepeatBox.Text))
+                return;
+
+            await _authenticationRepository.AddNewUserAsync(korisnik);
+
+            adminWindow.Initialize_AdminScreen();
+            this.Close();
         }
     }
 }

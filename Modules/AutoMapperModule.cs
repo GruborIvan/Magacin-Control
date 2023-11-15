@@ -23,13 +23,11 @@ namespace CSS_MagacinControl_App.Modules
 
                 cfg.CreateMap<IdentiViewModel, IdentDbo>()
                     .ForMember(x => x.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
-                    //.ForMember(x => x.IdentBarkod, opt => opt.MapFrom(src => src.Barkod))
                     .ForMember(x => x.PrimljenaKolicina, opt => opt.MapFrom(src => src.PripremljenaKolicina));
 
                 cfg.CreateMap<FakturaDbo, FaktureViewModel>()
                     .ForMember(x => x.DatumFakture, opt => opt.MapFrom(src => src.DatumFakture.ToString("dd/MM/yyyy")))
-                    .ForMember(x => x.Status, opt => opt.MapFrom(src => src.StatusFakture))
-                    .ForMember(x => x.Magacioner, opt => opt.MapFrom(src => "Magacioner hardcoded."));
+                    .ForMember(x => x.Status, opt => opt.MapFrom(src => src.StatusFakture));
 
                 cfg.CreateMap<FaktureViewModel, FakturaDbo>()
                     .ForMember(x => x.DatumFakture, opt => opt.MapFrom(src => DateTime.ParseExact(src.DatumFakture, "dd/MM/yyyy", CultureInfo.InvariantCulture)))
