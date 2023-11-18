@@ -29,8 +29,20 @@ namespace CSS_MagacinControl_App.Dialog
             }
 
             return MessageBox.Show(
-                messageBoxText: $" Pokušaj da se dodeli isti barkod dva različitim identima! \n {errorContents}",
+                messageBoxText: $" Pokušaj da se dodeli isti barkod različitim identima! \n {errorContents}",
                 caption: "Neispravan fajl!",
+                button: MessageBoxButton.OK,
+                icon: MessageBoxImage.Error,
+                defaultResult: MessageBoxResult.Yes
+            );
+        }
+
+        // Pokretanje - Nije moguće uspostaviti vezu sa bazom podataka!
+        public MessageBoxResult GetDatabaseNotAccessibleDialog()
+        {
+            return MessageBox.Show(
+                messageBoxText: $" Nije moguće uspostaviti vezu sa bazom podataka!\n Proverite kredencijale i pokušajte ponovo!",
+                caption: "Greška prilikom konekcije!",
                 button: MessageBoxButton.OK,
                 icon: MessageBoxImage.Error,
                 defaultResult: MessageBoxResult.Yes
@@ -67,6 +79,18 @@ namespace CSS_MagacinControl_App.Dialog
             return MessageBox.Show(
                 messageBoxText: $" Lozinke se ne poklapaju!",
                 caption: "Neuspešno dodavanje korisnika!",
+                button: MessageBoxButton.OK,
+                icon: MessageBoxImage.Error,
+                defaultResult: MessageBoxResult.Yes
+            );
+        }
+
+        // Kreiranje novog korisnika - Ne poklapaju se sifra i ponovljena sifra.
+        public MessageBoxResult GetRazliciteSifre_PromenaSifreDialog()
+        {
+            return MessageBox.Show(
+                messageBoxText: $"  Unesene lozinke se ne poklapaju! \n  Unesite ponovo!",
+                caption: " Neuspešna promena lozinke!",
                 button: MessageBoxButton.OK,
                 icon: MessageBoxImage.Error,
                 defaultResult: MessageBoxResult.Yes
@@ -178,6 +202,18 @@ namespace CSS_MagacinControl_App.Dialog
                 caption: "Greška prilikom skeniranja!",
                 button: MessageBoxButton.OK,
                 icon: MessageBoxImage.Warning,
+                defaultResult: MessageBoxResult.Yes
+            );
+        }
+
+        // Kad korisnik uspesno promeni lozinku naloga.
+        public MessageBoxResult GetUspesnoPromenjenaLozinkaKorisnikaDialog()
+        {
+            return MessageBox.Show(
+                messageBoxText: $" Uspešno promenjena lozinka naloga!",
+                caption: "Sačuvano!",
+                button: MessageBoxButton.OK,
+                icon: MessageBoxImage.Information,
                 defaultResult: MessageBoxResult.Yes
             );
         }

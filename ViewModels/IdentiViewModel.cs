@@ -9,8 +9,9 @@
         public decimal KolicinaSaFakture { get; set; }
         public decimal PripremljenaKolicina { get; set; }
         public decimal Razlika { get; set; }
+        public int Oznaka { get; set; }
 
-        public IdentiViewModel(string sifraIdenta, string nazivIdenta, string identBarKod, string brojFakture, decimal kolicinaSaFakture, decimal pripremljenaKolicina, decimal razlika)
+        public IdentiViewModel(string sifraIdenta, string nazivIdenta, string identBarKod, string brojFakture, decimal kolicinaSaFakture, decimal pripremljenaKolicina, decimal razlika, int oznaka)
         {
             SifraIdenta = sifraIdenta;
             NazivIdenta = nazivIdenta;
@@ -19,6 +20,7 @@
             KolicinaSaFakture = kolicinaSaFakture;
             PripremljenaKolicina = pripremljenaKolicina;
             Razlika = razlika;
+            Oznaka = oznaka;
         }
 
         public IdentiViewModel() 

@@ -23,13 +23,20 @@
 
                     <DataGrid x:Name="UsersGrid" TextBlock.TextAlignment="Center" RowEditEnding="UsersGrid_RowEditEnding" 
                               ItemsSource="{Binding Path = userModelState}" 
-                              AutoGenerateColumns="False" CanUserAddRows="False" Height="140" Width="353" Canvas.Left="19" Canvas.Top="47" 
-                              HorizontalAlignment="Center" VerticalAlignment="Top">
+                              AutoGenerateColumns="False" CanUserAddRows="False" Height="140" Width="371" Canvas.Left="10" Canvas.Top="53" 
+                              HorizontalAlignment="Left" VerticalAlignment="Top">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Username" Width="7*" Binding="{Binding Username, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
                             <DataGridTextColumn Header="Ime" Width="7*" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
                             <DataGridTextColumn Header="Prezime" Width="7*" Binding="{Binding Surname, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
                             <DataGridTextColumn Header="Admin" Width="4*" Binding="{Binding IsAdmin, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                            <DataGridTemplateColumn Width="5*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Lozinka" Click="ChangePassword_ButtonClick"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
 

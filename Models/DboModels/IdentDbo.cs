@@ -15,8 +15,9 @@ namespace CSS_MagacinControl_App.Models.DboModels
         public string NazivIdenta { get; set; }
         public int KolicinaSaFakture { get; set; }
         public int PrimljenaKolicina { get; set; }
+        public int Oznaka { get; set; }
 
-        public IdentDbo(Guid id, string sifraIdenta, string brojFakture, string nazivIdenta, int kolicinaSaFakture, int primljenaKolicina)
+        public IdentDbo(Guid id, string sifraIdenta, string brojFakture, string nazivIdenta, int kolicinaSaFakture, int primljenaKolicina, int oznaka)
         {
             Id = id;
             SifraIdenta = sifraIdenta;
@@ -24,6 +25,7 @@ namespace CSS_MagacinControl_App.Models.DboModels
             NazivIdenta = nazivIdenta;
             KolicinaSaFakture = kolicinaSaFakture;
             PrimljenaKolicina = primljenaKolicina;
+            Oznaka = oznaka;
         }
 
         public IdentDbo() { }

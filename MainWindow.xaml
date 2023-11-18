@@ -66,19 +66,21 @@
                 <Label Content="Fakture:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Margin="308,10,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
                 <Label Content="Identi:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,272,561,0" VerticalAlignment="Top" Height="26" Width="91"/>
 
-                <Canvas Name="ScanCanvas" Margin="16,324,676,45">
-                    <TextBox Name="BarCodeTextBox" FontSize="22" Height="35" Width="198" TextWrapping="Wrap" TextAlignment="Center" Text="" Canvas.Top="35" KeyDown="BarCodeTextBox_KeyDown" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="28"/>
-                    <Label Content="Unos bar koda:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Height="27" Width="128" Canvas.Left="63" Canvas.Top="3"/>
+                <Canvas Name="ScanCanvas" Margin="10,298,652,71">
+                    <TextBox Name="BarCodeTextBox" FontSize="22" Height="35" Width="196" TextWrapping="Wrap" TextAlignment="Center" Text="" Canvas.Top="32" KeyDown="BarCodeTextBox_KeyDown" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="10"/>
+                    <Label Content="Unos bar koda:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Height="27" Width="128" Canvas.Left="61"/>
+                    <TextBox x:Name="KolicinaBarKodTextBox" IsEnabled="False" KeyDown="KolicinaBarKod_KeyDown" Canvas.Left="224" FontSize="22" TextWrapping="Wrap" Text="" Canvas.Top="32" Width="60" HorizontalAlignment="Left" Height="35" VerticalAlignment="Center"/>
+                    <Label Name="KolicineLabel" Content="Količina:" FontWeight="Bold" Canvas.Left="224" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="2"/>
                 </Canvas>
-                <Canvas Name="SnimiEndCanvas" Margin="16,423,673,10" Grid.RowSpan="2">
-                    <Button Name="SnimiZaNaknadniZavrsetakButton" Background="#e6bfad" FontSize="13" Content="Snimi za naknadni završetak" Canvas.Left="32" HorizontalAlignment="Center" VerticalAlignment="Center" Height="36" Width="182" Canvas.Top="10" Click="SnimiZaNaknadniZavrsetakButton_Click">
+                <Canvas Name="SnimiEndCanvas" Margin="14,395,675,-5" Grid.RowSpan="2">
+                    <Button Name="SnimiZaNaknadniZavrsetakButton" Background="#e6bfad" FontSize="13" Content="Snimi za naknadni završetak" Canvas.Left="23" HorizontalAlignment="Left" VerticalAlignment="Top" Height="51" Width="226" Click="SnimiZaNaknadniZavrsetakButton_Click">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="5"/>
                             </Style>
                         </Button.Resources>
                     </Button>
-                    <Button Name="ZavrsetakButton" Background="#f54b31" FontSize="16" Content="Završetak" Canvas.Left="32" Canvas.Top="65" Height="36" Width="182" HorizontalAlignment="Center" VerticalAlignment="Top" Click="ZavrsetakButton_Click">
+                    <Button Name="ZavrsetakButton" Background="#f54b31" FontSize="16" Content="Završetak" Canvas.Left="23" Canvas.Top="75" Height="51" Width="226" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ZavrsetakButton_Click">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="5"/>
@@ -88,7 +90,7 @@
                 </Canvas>
 
                 <Canvas x:Name="FiltersCanvas" Margin="16,51,676,183" Background="#71bbd4">
-                    <Label Content="Filters:" FontWeight="Bold" FontSize="16" Height="37" Width="68" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="100"/>
+                    <Label Content="Filteri:" FontWeight="Bold" FontSize="16" Height="37" Width="68" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="100"/>
                     <Label Content="Broj fakture:" Height="26" Width="75" HorizontalAlignment="Center" Canvas.Top="42" VerticalAlignment="Top" Canvas.Left="10"/>
                     <ComboBox x:Name="BrojeviFaktureComboBox" Width="126" SelectionChanged="BrojeviFaktureComboBox_SelectionChanged" Height="22" HorizontalAlignment="Center" Canvas.Left="131" Canvas.Top="44" VerticalAlignment="Top"/>
                     <Label Content="Datum:" Height="26" Width="48" HorizontalAlignment="Center" Canvas.Top="83" VerticalAlignment="Top" Canvas.Left="13"/>
@@ -121,10 +123,10 @@
                         </Button.Resources>
                     </Button>
                 </Canvas>
-                <Canvas Margin="16,-40,699,428">
-                    <Label Content="Učitavanje podataka iz fajla" Height="26" Width="154" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <TextBox TextWrapping="Wrap" Text="" Width="174" Height="34" x:Name="FileNameTextBox" HorizontalAlignment="Center" Canvas.Top="26" VerticalAlignment="Top"/>
-                    <Button x:Name="UcitajButton" Content="Učitaj" Background="#e6bfad" Height="34" Width="90" Click="UcitajButton_Click" HorizontalAlignment="Left" Canvas.Left="179" Canvas.Top="26" VerticalAlignment="Center">
+                <Canvas Margin="14,-37,658,425">
+                    <Label FontSize="15" Content="Učitavanje podataka iz fajla:" Height="26" Width="197" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBox TextWrapping="Wrap" Text="" Width="174" Height="34" x:Name="FileNameTextBox" HorizontalAlignment="Center" Canvas.Top="31" VerticalAlignment="Top" IsReadOnly="True"/>
+                    <Button x:Name="UcitajButton" Content="Učitaj" Background="#e6bfad" Height="34" Width="90" Click="UcitajButton_Click" HorizontalAlignment="Center" Canvas.Left="179" Canvas.Top="31" VerticalAlignment="Top">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="5"/>

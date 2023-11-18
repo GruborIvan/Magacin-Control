@@ -1,7 +1,7 @@
 ﻿using CSS_MagacinControl_App.Dialog;
 using CSS_MagacinControl_App.Interfaces;
 using CSS_MagacinControl_App.ViewModels.Authentication;
-using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -46,6 +46,14 @@ namespace CSS_MagacinControl_App
         {
             AddUserWindow addUserWindow = new (_authenticationRepository, this);
             addUserWindow.Show();
+        }
+
+        private void ChangePassword_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            Guid userChangeIndentifier = (((FrameworkElement)sender).DataContext as UserModel).Id;
+
+            var changePasswordWindow = new ChangeUserPasswordWindow(userChangeIndentifier, _authenticationRepository);
+            changePasswordWindow.Show();
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

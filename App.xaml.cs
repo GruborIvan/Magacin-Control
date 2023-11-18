@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using CSS_MagacinControl_App.Dialog;
 using CSS_MagacinControl_App.Interfaces;
 using CSS_MagacinControl_App.Migrations.DbInitialize;
 using CSS_MagacinControl_App.Models.DboModels;
@@ -7,6 +8,7 @@ using CSS_MagacinControl_App.Modules;
 using CSS_MagacinControl_App.Parsers;
 using CSS_MagacinControl_App.Repository;
 using CSS_MagacinControl_App.Services;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -64,16 +66,24 @@ namespace CSS_MagacinControl_App
         {
             await AppHost!.StartAsync();
 
-            // Make sure that the database is up to date with migrations.
-            // Seed initial admin user to the system.
-            var dbCtx = new AppDbContext();
-            dbCtx.Database.Migrate();
-            DbInitializer.Initialize(dbCtx);
+            try
+            {
+                // Make sure that the database is up to date with migrations.
+                // Seed initial admin user to the system.
+                var dbCtx = new AppDbContext();
+                dbCtx.Database.Migrate();
+                DbInitializer.Initialize(dbCtx);
 
-            var startupForm = AppHost.Services.GetRequiredService<AuthenticationWindow>();
-            startupForm.Show();
+                var startupForm = AppHost.Services.GetRequiredService<AuthenticationWindow>();
+                startupForm.Show();
 
-            base.OnStartup(e);
+                base.OnStartup(e);
+            }
+            catch (SqlException sqlEx)
+            {
+                new DialogHandler().GetDatabaseNotAccessibleDialog();
+                Shutdown(1);
+            }
         }
 
         protected override async void OnExit(ExitEventArgs e)

@@ -17,5 +17,7 @@ namespace CSS_MagacinControl_App.Interfaces
         Task AddNewUserAsync(UserModel userModel);
         Task<UserModel> FindChangedUserAsync(List<UserModel> newState);
         Task SaveUserChangesAsync(UserModel userModel);
+        Task ChangeUserPasswordAsync(Guid userIdentifier, string newPassword);
+        string EncryptPassword(string plainTextPassword);
     }
 }

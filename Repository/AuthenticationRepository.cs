@@ -4,8 +4,11 @@ using CSS_MagacinControl_App.Interfaces;
 using CSS_MagacinControl_App.Models.DboModels;
 using CSS_MagacinControl_App.ViewModels.Authentication;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CSS_MagacinControl_App.Repository
@@ -26,6 +29,7 @@ namespace CSS_MagacinControl_App.Repository
         public async Task AddNewUserAsync(UserModel userModel)
         {
             var userDbo = _mapper.Map<UserDbo>(userModel);
+            userDbo.Password = EncryptPassword(userDbo.Password);
 
             _dbContext.Users.Add(userDbo);
             await _dbContext.SaveChangesAsync();
@@ -33,11 +37,14 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task<(bool, bool)> AuthenticateToSytemAsync(string username, string pass)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username == username);
+            string password = EncryptPassword(pass);
 
-            if (user != null) 
+            bool exists = await _dbContext.Users.Where(x => x.Username == username && x.Password == password).AnyAsync();
+
+            if (exists) 
             {
-                return (true, user.IsAdmin);
+                bool isAdmin = (await _dbContext.Users.Where(x => x.Username == username && x.Password == password).FirstAsync()).IsAdmin;
+                return (true, isAdmin);
             }
 
             return (false, false);
@@ -101,6 +108,36 @@ namespace CSS_MagacinControl_App.Repository
             }
 
             return true;
+        }
+
+        public async Task ChangeUserPasswordAsync(Guid userIdentifier, string newPassword)
+        {
+            var userDbo = await _dbContext.Users.FindAsync(userIdentifier);
+
+            if (userDbo != null)
+            {
+                userDbo.Password = EncryptPassword(newPassword);
+                _dbContext.Entry(userDbo).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();  
+            }
+        }
+
+        public string EncryptPassword(string plainTextPassword)
+        {
+            // Create a SHA256 hash from string   
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                // Computing Hash - returns here byte array
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(plainTextPassword));
+
+                // now convert byte array to a string   
+                StringBuilder stringbuilder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    stringbuilder.Append(bytes[i].ToString("x2"));
+                }
+                return stringbuilder.ToString();
+            }
         }
     }
 }
