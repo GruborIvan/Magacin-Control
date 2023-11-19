@@ -80,7 +80,7 @@ namespace CSS_MagacinControl_App.Repository
             string line;
             var kolicine = new List<KolicineCsv>();
 
-            FileStream fileStream = new FileStream(fileName, FileMode.Open);
+            var fileStream = new FileStream(fileName, FileMode.Open);
 
             using (StreamReader reader = new StreamReader(fileStream))
             {

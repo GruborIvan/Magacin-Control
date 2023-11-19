@@ -29,11 +29,13 @@ namespace CSS_MagacinControl_App
                 Name = ImeTextBox.Text,
                 Surname = PrezimeTextBox.Text,
                 IsAdmin = (bool)AdminCheckBox.IsChecked,
-                Password = PasswordBox.Text,
+                Password = PasswordBox.Password,
             };
 
-            if (!await _authenticationRepository.ValidateNewUserAsync(korisnik, PasswordRepeatBox.Text))
+            if (!await _authenticationRepository.ValidateNewUserAsync(korisnik, PasswordRepeatBox.Password))
+            {
                 return;
+            }
 
             await _authenticationRepository.AddNewUserAsync(korisnik);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace CSS_MagacinControl_App.Models.DboModels
 {
@@ -10,6 +11,8 @@ namespace CSS_MagacinControl_App.Models.DboModels
         public bool IsAdmin { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
+        [Timestamp]
+        public byte[] Timestamp { get; set; }
 
         public UserDbo(Guid id, string username, string password, string name, string surname, bool isAdmin)
         {

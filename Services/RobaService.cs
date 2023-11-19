@@ -35,7 +35,7 @@ namespace CSS_MagacinControl_App.Services
 
         public List<IdentiViewModel> ValidateIdentScanState(List<IdentiViewModel> identi)
         {
-            List<IdentiViewModel> failList = new List<IdentiViewModel>();
+            List<IdentiViewModel> failList = new();
 
             foreach (var ident in identi)
             {
@@ -66,10 +66,10 @@ namespace CSS_MagacinControl_App.Services
             {
                 await _robaRepository.SaveIdentiAsync(dataModel.IdentState);
 
-                List<IdentBarkodDbo> barkodIdentRelations = new List<IdentBarkodDbo>();
+                List<IdentBarkodDbo> barkodIdentRelations = new();
                 foreach (var kvp in dataModel.BarcodeToIdentDictionary)
                 {
-                    IdentBarkodDbo idenBarcodeDbo = new IdentBarkodDbo
+                    var idenBarcodeDbo = new IdentBarkodDbo
                     (
                         Guid.NewGuid(),
                         kvp.Value,

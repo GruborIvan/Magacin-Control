@@ -36,6 +36,11 @@ namespace CSS_MagacinControl_App
 
             await _authenticationRepository.ChangeUserPasswordAsync(userIdentifier, passwordUnos1);
             dialogHandler.GetUspesnoPromenjenaLozinkaKorisnikaDialog();
+
+            PasswordBox1.Password = string.Empty;
+            PasswordBox2.Password = string.Empty;
+
+            this.Close();
         }
     }
 }

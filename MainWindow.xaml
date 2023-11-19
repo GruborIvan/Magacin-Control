@@ -124,7 +124,7 @@
                     </Button>
                 </Canvas>
                 <Canvas Margin="14,-37,658,425">
-                    <Label FontSize="15" Content="Učitavanje podataka iz fajla:" Height="26" Width="197" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <Label FontSize="15" Content="Učitavanje podataka iz fajla:" Height="36" Width="197" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBox TextWrapping="Wrap" Text="" Width="174" Height="34" x:Name="FileNameTextBox" HorizontalAlignment="Center" Canvas.Top="31" VerticalAlignment="Top" IsReadOnly="True"/>
                     <Button x:Name="UcitajButton" Content="Učitaj" Background="#e6bfad" Height="34" Width="90" Click="UcitajButton_Click" HorizontalAlignment="Center" Canvas.Left="179" Canvas.Top="31" VerticalAlignment="Top">
                         <Button.Resources>
