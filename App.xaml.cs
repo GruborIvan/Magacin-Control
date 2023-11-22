@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
+using System;
 using System.IO;
 using System.Windows;
 
@@ -27,8 +30,15 @@ namespace CSS_MagacinControl_App
 
         public App()
         {
-
             AppHost = Host.CreateDefaultBuilder()
+                .UseSerilog((host, loggerConfiguration) =>
+                {
+                    loggerConfiguration
+                        .MinimumLevel.Information()
+                        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                        .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+                        .WriteTo.File(@"C:\Users\korisnik\OneDrive\Radna površina\Service LOG\logs.txt");
+                })
                 .ConfigureServices((hostContext, services) =>
                 {
                     IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -36,9 +46,14 @@ namespace CSS_MagacinControl_App
                         .AddJsonFile("appsettings.json")
                         .Build();
 
-                    var connectionString = configuration.GetConnectionString("MagacinDbConnectionString");
+                    var connectionString = configuration.GetConnectionString("TataCompConnectionString");
 
                     services.AddDbContext<AppDbContext>(
+                        options => options.UseSqlServer(connectionString),
+                        ServiceLifetime.Transient
+                    );
+
+                    services.AddDbContextFactory<AppDbContext>(
                         options => options.UseSqlServer(connectionString),
                         ServiceLifetime.Transient
                     );

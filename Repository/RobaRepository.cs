@@ -4,6 +4,7 @@ using CSS_MagacinControl_App.Models;
 using CSS_MagacinControl_App.Models.DboModels;
 using CSS_MagacinControl_App.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +14,26 @@ namespace CSS_MagacinControl_App.Repository
 {
     public class RobaRepository : IRobaRepository
     {
-        public AppDbContext _dbContext;
+        private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
         private readonly IMapper _mapper;
+        private readonly ILogger<RobaRepository> _logger;
 
-        public RobaRepository(AppDbContext dbContext, IMapper mapper)
+        public RobaRepository(IDbContextFactory<AppDbContext> dbContextFactory, IMapper mapper, ILogger<RobaRepository> logger)
         {
-            _dbContext = dbContext;
+            _dbContextFactory = dbContextFactory;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<string>> GetBrojeviFakturaAsync()
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             return await _dbContext.RobaZaPakovanje.Select(x => x.BrojFakture).ToArrayAsync();
         }
 
         public async Task<FaktureViewModel> GetSingleFakturaDataAsync(string brojFakture)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var fakturaDbo = await _dbContext.RobaZaPakovanje.Where(x => x.BrojFakture == brojFakture).FirstOrDefaultAsync();
 
             return _mapper.Map<FaktureViewModel>(fakturaDbo);
@@ -36,6 +41,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task<IEnumerable<IdentiViewModel>> GetIdentiForFakturaAsync(string brojFakture)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var fakturaItemsDbo = await _dbContext.RobaZaPakovanjeItem.Where(x => x.BrojFakture == brojFakture).ToListAsync();
 
             return _mapper.Map<IEnumerable<IdentiViewModel>>(fakturaItemsDbo);
@@ -43,6 +49,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task<FaktureIdentiViewModel> GetFilteredFakturaDataAsync(FilterModel filter)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var query = from faktura in _dbContext.RobaZaPakovanje
                         select faktura;
 
@@ -88,6 +95,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task<bool> SaveFakturaAsync(FaktureViewModel faktura)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var checkFaktura = await _dbContext.RobaZaPakovanje.FindAsync(faktura.BrojFakture);
 
             if (checkFaktura == null)
@@ -104,12 +112,14 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task<bool> CheckIfFakturaAlreadyExistsAsync(string brojFakture)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var faktura = await _dbContext.RobaZaPakovanje.Where(x => x.BrojFakture == brojFakture).ToListAsync();
             return faktura.Count > 0;
         }
 
         public async Task<string> GetNazivIdentaByBarcodeAsync(string enteredBarcode)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var identFilter = await _dbContext.IdentBarkod
                               .Where(x => x.BarkodIdenta == enteredBarcode)
                               .ToListAsync();
@@ -122,6 +132,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task SaveIdentiAsync(List<IdentiViewModel> identi)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var identiListDbo = _mapper.Map<IEnumerable<IdentDbo>>(identi);
 
             await _dbContext.RobaZaPakovanjeItem.AddRangeAsync(identiListDbo);
@@ -130,6 +141,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task SaveIdentBarcodeRelationAsync(List<IdentBarkodDbo> identBarkodRelations)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var identBarCodes = _dbContext.IdentBarkod.Select(x => x.BarkodIdenta).ToList();
 
             var addList = identBarkodRelations.Where(x => !identBarCodes.Contains(x.BarkodIdenta)).ToList();
@@ -140,6 +152,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task UpdateIdentiAsync(List<IdentiViewModel> identi)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var identiListDbo = _mapper.Map<IEnumerable<IdentDbo>>(identi);
             List<IdentDbo> identiList = _dbContext.RobaZaPakovanjeItem.ToList();
 
@@ -162,6 +175,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task ChangeFakturaStatusToDoneAsync(string brojFakture)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var checkFaktura = await _dbContext.RobaZaPakovanje.FindAsync(brojFakture);
             checkFaktura.StatusFakture = "Završeno";
 

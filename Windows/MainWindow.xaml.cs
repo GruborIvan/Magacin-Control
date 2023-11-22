@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -279,11 +280,13 @@ namespace CSS_MagacinControl_App
 
         private async void ZavrsetakButton_Click(object sender, RoutedEventArgs e)
         {
+            ZavrsetakButton.IsEnabled = false;
             var unscannedIdents = _robaService.ValidateIdentScanState(_identTrackViewModel.IdentState);
 
             if (unscannedIdents.Count != 0)
             {
                 dialogHandler.GetNotAllIdentsScannedDialog(unscannedIdents);
+                ZavrsetakButton.IsEnabled = true;
                 return;
             }
 
@@ -302,10 +305,12 @@ namespace CSS_MagacinControl_App
 
             ChangeCurrentState(result);
             dialogHandler.GetUspesnoSnimljenoZaZavrsetakDialog(selectedFaktura.BrojFakture);
+            ZavrsetakButton.IsEnabled = true;
         }
 
         private async void SnimiZaNaknadniZavrsetakButton_Click(object sender, RoutedEventArgs e)
         {
+            SnimiZaNaknadniZavrsetakButton.IsEnabled = false;
             await _robaService.SaveFakturaAndItemsAsync(_identTrackViewModel);
 
             // REFRESH THE VIEW..
@@ -320,6 +325,7 @@ namespace CSS_MagacinControl_App
             ChangeCurrentState(result);
 
             dialogHandler.GetUspesnoSnimljenoZaNaknadniZavrsetakDialog(_identTrackViewModel.FaktureState.First().BrojFakture);
+            SnimiZaNaknadniZavrsetakButton.IsEnabled = true;
         }
 
         private void BarCodeTextBox_KeyDown(object sender, KeyEventArgs e)

@@ -103,14 +103,20 @@ namespace CSS_MagacinControl_App.Repository
 
         private string ConvertDateToRightFormat(string oldDate)
         {
-            string[] dateParts = oldDate.Split('.');
-            DateTime date = new DateTime(
-                Convert.ToInt32(dateParts[2]),
-                Convert.ToInt32(dateParts[1]),
-                Convert.ToInt32(dateParts[0])
-            );
+            if (oldDate.Contains('.'))
+            {
+                // Fix double digit day & month.
+                string[] dateParts = oldDate.Split('.');
+                dateParts[0] = int.Parse(dateParts[0]) < 10 ? $"0{dateParts[0]}" : dateParts[0];
+                dateParts[1] = int.Parse(dateParts[1]) < 10 ? $"0{dateParts[1]}" : dateParts[1];
 
-            return date.ToString("dd/MM/yyyy");
+                //Form date string.
+                return $"{dateParts[0]}/{dateParts[1]}/{dateParts[2]}";
+            }
+            else
+            {
+                return oldDate;
+            }
         }
 
         public void CreateOutputDirectoryIfNotExists(string outputPath)

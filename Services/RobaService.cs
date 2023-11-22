@@ -2,6 +2,7 @@
 using CSS_MagacinControl_App.Models;
 using CSS_MagacinControl_App.Models.DboModels;
 using CSS_MagacinControl_App.ViewModels;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace CSS_MagacinControl_App.Services
     public class RobaService : IRobaService
     {
         private readonly IRobaRepository _robaRepository;
+        private readonly ILogger<RobaService> _logger;
 
-        public RobaService(IRobaRepository robaRepository)
+        public RobaService(IRobaRepository robaRepository, ILogger<RobaService> logger)
         {
             _robaRepository = robaRepository;
+            _logger = logger;
         }
 
         public async Task SaveFaktura(FaktureIdentiViewModel faktureIdenti)
@@ -30,7 +33,15 @@ namespace CSS_MagacinControl_App.Services
 
         public async Task<FaktureIdentiViewModel> GetFilteredFaktureAsync(FilterModel filter)
         {
-            return await _robaRepository.GetFilteredFakturaDataAsync(filter);
+            try
+            {
+                return await _robaRepository.GetFilteredFakturaDataAsync(filter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
         }
 
         public List<IdentiViewModel> ValidateIdentScanState(List<IdentiViewModel> identi)
@@ -59,30 +70,38 @@ namespace CSS_MagacinControl_App.Services
         }
 
         public async Task SaveFakturaAndItemsAsync(IdentTrackViewModel dataModel)
-        {
-            bool fakturaAlreadyExists = await _robaRepository.SaveFakturaAsync(dataModel.FaktureState.First());
-
-            if (!fakturaAlreadyExists)
+        {   
+            try
             {
-                await _robaRepository.SaveIdentiAsync(dataModel.IdentState);
+                bool fakturaAlreadyExists = await _robaRepository.SaveFakturaAsync(dataModel.FaktureState.First());
 
-                List<IdentBarkodDbo> barkodIdentRelations = new();
-                foreach (var kvp in dataModel.BarcodeToIdentDictionary)
+                if (!fakturaAlreadyExists)
                 {
-                    var idenBarcodeDbo = new IdentBarkodDbo
-                    (
-                        Guid.NewGuid(),
-                        kvp.Value,
-                        kvp.Key
-                    );
-                    barkodIdentRelations.Add(idenBarcodeDbo);
-                }
+                    await _robaRepository.SaveIdentiAsync(dataModel.IdentState);
 
-                await _robaRepository.SaveIdentBarcodeRelationAsync(barkodIdentRelations);
+                    List<IdentBarkodDbo> barkodIdentRelations = new();
+                    foreach (var kvp in dataModel.BarcodeToIdentDictionary)
+                    {
+                        var idenBarcodeDbo = new IdentBarkodDbo
+                        (
+                            Guid.NewGuid(),
+                            kvp.Value,
+                            kvp.Key
+                        );
+                        barkodIdentRelations.Add(idenBarcodeDbo);
+                    }
+
+                    await _robaRepository.SaveIdentBarcodeRelationAsync(barkodIdentRelations);
+                }
+                else
+                {
+                    await _robaRepository.UpdateIdentiAsync(dataModel.IdentState);
+                }
             }
-            else
+            catch (Exception e)
             {
-                await _robaRepository.UpdateIdentiAsync(dataModel.IdentState);
+                _logger.LogError(e, e.Message);
+                throw;
             }
         }
 

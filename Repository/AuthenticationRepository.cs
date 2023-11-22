@@ -15,13 +15,13 @@ namespace CSS_MagacinControl_App.Repository
 {
     public class AuthenticationRepository : IAuthenticationRepository
     {
-        public AppDbContext _dbContext;
+        private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
         private readonly IMapper _mapper;
         private readonly DialogHandler dialogHandler;
 
-        public AuthenticationRepository(AppDbContext dbContext, IMapper mapper)
+        public AuthenticationRepository(IDbContextFactory<AppDbContext> dbContextFactory, IMapper mapper)
         {
-            _dbContext = dbContext;
+            _dbContextFactory = dbContextFactory;
             _mapper = mapper;
             dialogHandler = new DialogHandler();
         }
@@ -31,12 +31,14 @@ namespace CSS_MagacinControl_App.Repository
             var userDbo = _mapper.Map<UserDbo>(userModel);
             userDbo.Password = EncryptPassword(userDbo.Password);
 
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             _dbContext.Users.Add(userDbo);
             await _dbContext.SaveChangesAsync();
         }
 
         public async Task<(bool, bool)> AuthenticateToSytemAsync(string username, string pass)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             string password = EncryptPassword(pass);
 
             bool exists = await _dbContext.Users.Where(x => x.Username == username && x.Password == password).AnyAsync();
@@ -52,6 +54,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task<UserModel> FindChangedUserAsync(List<UserModel> newState)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var users = await _dbContext.Users.ToListAsync();
 
             for (int i = 0; i < newState.Count; i++)
@@ -70,6 +73,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task<List<UserModel>> GetUsersAsync()
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var usersDbo = await _dbContext.Users.ToListAsync();
 
             var users = _mapper.Map<List<UserModel>>(usersDbo);
@@ -79,6 +83,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task SaveUserChangesAsync(UserModel userModel)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var userDbo = _mapper.Map<UserDbo>(userModel);
 
             _dbContext.ChangeTracker.Clear();
@@ -88,6 +93,8 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task<bool> ValidateNewUserAsync(UserModel userModel, string repeatPassword)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
+
             if (string.IsNullOrEmpty(userModel.Username) || string.IsNullOrEmpty(userModel.Name) || string.IsNullOrEmpty(userModel.Surname) || 
                 string.IsNullOrEmpty(userModel.Password) || string.IsNullOrEmpty(repeatPassword))
             {
@@ -112,6 +119,7 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task ChangeUserPasswordAsync(Guid userIdentifier, string newPassword)
         {
+            using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var userDbo = await _dbContext.Users.FindAsync(userIdentifier);
 
             if (userDbo != null)
