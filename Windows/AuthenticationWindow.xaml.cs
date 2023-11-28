@@ -46,6 +46,7 @@ namespace CSS_MagacinControl_App
                 dialogHandler.GetFailedUsernamePassDialog();
                 UserBox.Text = string.Empty;
                 PassBox.Password = string.Empty;
+                UserBox.Focus();
             }
             LoginButton.IsEnabled = true; // Must make this because of mutex lock.
         }

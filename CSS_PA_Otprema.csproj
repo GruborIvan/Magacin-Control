@@ -6,22 +6,22 @@
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Images\WH_Icon.ico</ApplicationIcon>
-    <AssemblyName>CSS_PA_Otprema</AssemblyName>
-    <StartupObject>CSS_MagacinControl_App.App</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Images\UserImage.jpg" />
-    <None Remove="Ini_Files\IniFile.txt" />
+    <None Remove="Images\WH_Icon.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Images\UserImage.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\WH_Icon.ico" />
-    <Content Include="Ini_Files\IniFile.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Images\WH_Icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\WH_Icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

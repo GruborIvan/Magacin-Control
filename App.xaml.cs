@@ -37,7 +37,7 @@ namespace CSS_MagacinControl_App
                         .MinimumLevel.Information()
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                         .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-                        .WriteTo.File(@"C:\Users\korisnik\OneDrive\Radna površina\Service LOG\logs.txt");
+                        .WriteTo.File(@"C:\Users\i.grubor\Desktop\CI\dewd\tekst.txt");
                 })
                 .ConfigureServices((hostContext, services) =>
                 {

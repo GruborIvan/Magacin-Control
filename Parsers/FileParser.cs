@@ -2,7 +2,6 @@
 using CSS_MagacinControl_App.Interfaces;
 using CSS_MagacinControl_App.Models.CsvModels;
 using CSS_MagacinControl_App.ViewModels;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -66,8 +65,7 @@ namespace CSS_MagacinControl_App.Parsers
 
                 var barKodMapDictionary = barCodeToNazivIdenta.ToDictionary(x => x.Barkod, x => x.NazivIdenta);
 
-                // UNCOMMENT LATER.
-                //fileNames.ForEach(fileName => { File.Delete(fileName); });
+                fileNames.ForEach(fileName => { File.Delete(fileName); });
 
                 return new FaktureIdentiViewModel()
                 {

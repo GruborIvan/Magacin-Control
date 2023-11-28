@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="AddUser" Height="520" Width="500"
+        Title="Dodavanje novog korisnika" Height="520" Width="500"
         Background="LightBlue">
     <Border>
         <Viewbox>

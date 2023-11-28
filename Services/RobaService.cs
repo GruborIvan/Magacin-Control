@@ -5,7 +5,9 @@ using CSS_MagacinControl_App.ViewModels;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace CSS_MagacinControl_App.Services
