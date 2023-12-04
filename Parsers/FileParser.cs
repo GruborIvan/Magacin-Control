@@ -66,7 +66,7 @@ namespace CSS_MagacinControl_App.Parsers
 
                 var barKodMapDictionary = barCodeToNazivIdenta.ToDictionary(x => x.Barkod, x => x.NazivIdenta);
 
-                //fileNames.ForEach(fileName => { File.Delete(fileName); });
+                fileNames.ForEach(fileName => { File.Delete(fileName); });
 
                 return new FaktureIdentiViewModel()
                 {
