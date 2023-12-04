@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.IO;
+﻿using CSS_MagacinControl_App.Modules;
+using Microsoft.EntityFrameworkCore;
 
 namespace CSS_MagacinControl_App.Models.DboModels
 {
@@ -19,12 +18,7 @@ namespace CSS_MagacinControl_App.Models.DboModels
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
-                    .Build();
-
-                var connectionString = configuration.GetConnectionString("TataCompConnectionString");
+                var connectionString = DbConnectionModule.GetConnectionString();
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }

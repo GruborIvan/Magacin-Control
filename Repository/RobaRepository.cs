@@ -85,6 +85,13 @@ namespace CSS_MagacinControl_App.Repository
 
             var idents = _mapper.Map<List<IdentiViewModel>>(identDbos);
 
+            idents.Where(x => x.OznakaUsluge.StartsWith("7")).ToList().ForEach(x =>
+            {
+                x.KolicinaSaFakture = 0;
+                x.PripremljenaKolicina = 0;
+                x.Razlika = 0;
+            });
+
             return new FaktureIdentiViewModel()
             {
                 FaktureViewModel = fakture,

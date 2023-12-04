@@ -13,13 +13,12 @@ namespace CSS_MagacinControl_App.Parsers
 {
     public class FileParser : IFileParser
     {
-        private readonly string _identiFileExtension = "_code.txt";
-        private readonly string _kolicineFileExtension = "_item.txt";
+        private readonly IFileParserRepository _fileParserRepository;
         private DialogHandler _dialogHandler;
 
+        private readonly string _identiFileExtension = "_code.txt";
+        private readonly string _kolicineFileExtension = "_item.txt";
         private readonly string baseFilePath = @"C:\OTPREME\";
-
-        private readonly IFileParserRepository _fileParserRepository;
 
         public FileParser(IFileParserRepository fileParserRepository)
         {
@@ -37,6 +36,8 @@ namespace CSS_MagacinControl_App.Parsers
 
                 var faktureViewModel = await _fileParserRepository.ReadFakturaHeaderFromCsvFileAsync(faktureFileName);
                 var identiViewModel = await _fileParserRepository.ReadIdentiFromCsvFileAsync(identiFileName, kolicineFileName, faktureViewModel.BrojFakture);
+
+                _fileParserRepository.CorrectAmountsForServices(identiViewModel);
 
                 var barCodeToNazivIdenta = identiViewModel
                                            .Select(o => new BarkodMap(o.Barkod, o.NazivIdenta))
@@ -65,7 +66,7 @@ namespace CSS_MagacinControl_App.Parsers
 
                 var barKodMapDictionary = barCodeToNazivIdenta.ToDictionary(x => x.Barkod, x => x.NazivIdenta);
 
-                fileNames.ForEach(fileName => { File.Delete(fileName); });
+                //fileNames.ForEach(fileName => { File.Delete(fileName); });
 
                 return new FaktureIdentiViewModel()
                 {

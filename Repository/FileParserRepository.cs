@@ -61,7 +61,8 @@ namespace CSS_MagacinControl_App.Repository
                         Barkod = lineDataItems[1],
                         NazivIdenta = lineDataItems[2],
                         Oznaka = Convert.ToInt32(lineDataItems[3]),
-                        BrojFakture = brojFakture
+                        BrojFakture = brojFakture,
+                        OznakaUsluge = lineDataItems[4]
                     };
 
                     var identViewModel = _mapper.Map<IdentiViewModel>(identCsv);
@@ -124,6 +125,19 @@ namespace CSS_MagacinControl_App.Repository
             if (!Directory.Exists(outputPath))
             {
                 Directory.CreateDirectory(outputPath);
+            }
+        }
+
+        public void CorrectAmountsForServices(List<IdentiViewModel> identi)
+        {
+            foreach (var ident in identi)
+            {
+                if (ident.OznakaUsluge.StartsWith("7"))
+                {
+                    ident.KolicinaSaFakture = 0;
+                    ident.PripremljenaKolicina = 0;
+                    ident.Razlika = 0;
+                }
             }
         }
     }

@@ -17,6 +17,7 @@ namespace CSS_MagacinControl_App.Models.DboModels
         public int KolicinaSaFakture { get; set; }
         public int PrimljenaKolicina { get; set; }
         public int Oznaka { get; set; }
+        public string OznakaUsluge { get; set; }
         [Timestamp]
         public byte[] Timestamp { get; set; }
 

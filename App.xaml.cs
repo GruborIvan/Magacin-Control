@@ -10,13 +10,11 @@ using CSS_MagacinControl_App.Repository;
 using CSS_MagacinControl_App.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using System;
-using System.IO;
 using System.Windows;
 
 namespace CSS_MagacinControl_App
@@ -37,16 +35,11 @@ namespace CSS_MagacinControl_App
                         .MinimumLevel.Information()
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                         .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-                        .WriteTo.File(@"C:\Users\i.grubor\Desktop\CI\dewd\tekst.txt");
+                        .WriteTo.File(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\Magacin App Deploy\Log.txt");
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    IConfigurationRoot configuration = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsettings.json")
-                        .Build();
-
-                    var connectionString = configuration.GetConnectionString("TataCompConnectionString");
+                    var connectionString = DbConnectionModule.GetConnectionString();
 
                     services.AddDbContext<AppDbContext>(
                         options => options.UseSqlServer(connectionString),

@@ -72,7 +72,10 @@ namespace CSS_MagacinControl_App.Services
         }
 
         public async Task SaveFakturaAndItemsAsync(IdentTrackViewModel dataModel)
-        {   
+        {
+            if (dataModel.FaktureState.Count == 0)
+                return;
+
             try
             {
                 bool fakturaAlreadyExists = await _robaRepository.SaveFakturaAsync(dataModel.FaktureState.First());

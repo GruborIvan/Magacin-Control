@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace CSS_MagacinControl_App
@@ -148,8 +149,10 @@ namespace CSS_MagacinControl_App
             return (dialog, result ?? false);
         }
 
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        private async void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
+            await SnimiZaNaknadniZavrsetak(false);
+
             var result = dialogHandler.GetLogOutDialog();
 
             if (result == MessageBoxResult.Yes)
@@ -158,6 +161,7 @@ namespace CSS_MagacinControl_App
                 _authenticationWindow.Show();
                 _authenticationWindow.UserBox.Clear();
                 _authenticationWindow.PassBox.Clear();
+                _authenticationWindow.UserBox.Focus();
                 this.Hide();
             }
         }
@@ -308,24 +312,40 @@ namespace CSS_MagacinControl_App
             ZavrsetakButton.IsEnabled = true;
         }
 
-        private async void SnimiZaNaknadniZavrsetakButton_Click(object sender, RoutedEventArgs e)
+        private async Task SnimiZaNaknadniZavrsetak(bool isUserClicked)
         {
             SnimiZaNaknadniZavrsetakButton.IsEnabled = false;
             await _robaService.SaveFakturaAndItemsAsync(_identTrackViewModel);
 
-            // REFRESH THE VIEW..
-            var selectedFaktura = _identTrackViewModel.FaktureState.First();
-            BrojeviFaktureComboBox.SelectedItem = selectedFaktura.BrojFakture;
-
             var filters = Load_SelectedFilters();
-            filters.BrojFakture = selectedFaktura.BrojFakture;
+
+            // REFRESH THE VIEW..
+            if (_identTrackViewModel.FaktureState.Any())
+            {
+                var selectedFaktura = _identTrackViewModel.FaktureState.First();
+                BrojeviFaktureComboBox.SelectedItem = selectedFaktura.BrojFakture;
+                filters.BrojFakture = selectedFaktura.BrojFakture;
+            }
+            else
+            {
+                filters.BrojFakture = string.Empty;
+            }
 
             var result = await _robaService.GetFilteredFaktureAsync(filters);
 
             ChangeCurrentState(result);
 
-            dialogHandler.GetUspesnoSnimljenoZaNaknadniZavrsetakDialog(_identTrackViewModel.FaktureState.First().BrojFakture);
+            if (isUserClicked)
+            {
+                dialogHandler.GetUspesnoSnimljenoZaNaknadniZavrsetakDialog(_identTrackViewModel.FaktureState.First().BrojFakture);
+            }
+
             SnimiZaNaknadniZavrsetakButton.IsEnabled = true;
+        }
+
+        private async void SnimiZaNaknadniZavrsetakButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SnimiZaNaknadniZavrsetak(isUserClicked: true);
         }
 
         private void BarCodeTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -363,8 +383,11 @@ namespace CSS_MagacinControl_App
             StatusComboBox.Text = "--";
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override async void OnClosed(EventArgs e)
         {
+            await SnimiZaNaknadniZavrsetak(false);
+
+            await Task.Delay(5000);
             base.OnClosed(e);
             Application.Current.Shutdown();
         }

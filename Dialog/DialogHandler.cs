@@ -171,7 +171,6 @@ namespace CSS_MagacinControl_App.Dialog
             );
         }
 
-
         // Admin - Save changes to user account?
         public MessageBoxResult GetSaveUserChangesDialog()
         {

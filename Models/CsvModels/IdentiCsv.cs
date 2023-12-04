@@ -7,6 +7,7 @@
         public string NazivIdenta { get; set; }
         public int Oznaka { get; set; }
         public string BrojFakture { get; set; }
+        public string OznakaUsluge { get; set; }
 
         public IdentiCsv() 
         {
