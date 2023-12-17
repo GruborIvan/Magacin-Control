@@ -18,8 +18,7 @@ namespace CSS_MagacinControl_App.Modules
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<IdentDbo, IdentiViewModel>()
-                    .ForMember(x => x.PripremljenaKolicina, opt => opt.MapFrom(src => src.PrimljenaKolicina))
-                    .ForMember(x => x.Razlika, opt => opt.MapFrom(src => (src.KolicinaSaFakture - src.PrimljenaKolicina)));
+                    .ForMember(x => x.PripremljenaKolicina, opt => opt.MapFrom(src => src.PrimljenaKolicina));
 
                 cfg.CreateMap<IdentiViewModel, IdentDbo>()
                     .ForMember(x => x.Id, opt => opt.MapFrom(src => Guid.NewGuid()))

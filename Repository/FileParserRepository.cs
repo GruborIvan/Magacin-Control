@@ -73,6 +73,8 @@ namespace CSS_MagacinControl_App.Repository
                 }
             }
 
+
+
             return identi;
         }
 
@@ -95,9 +97,18 @@ namespace CSS_MagacinControl_App.Repository
                         Kolicina = Convert.ToInt32(lineDataItems[1]),
                     };
 
-                    kolicine.Add(kolicinaItem);
+                    if (kolicine.Where(x => x.SifraIdenta.Equals(kolicinaItem.SifraIdenta)).Any())
+                    {
+                        kolicine.Where(x => x.SifraIdenta.Equals(kolicinaItem.SifraIdenta)).FirstOrDefault().Kolicina += kolicinaItem.Kolicina;
+                    }
+                    else
+                    {
+                        kolicine.Add(kolicinaItem);
+                    }
                 }
             }
+
+
 
             return kolicine;
         }
@@ -139,6 +150,22 @@ namespace CSS_MagacinControl_App.Repository
                     ident.Razlika = 0;
                 }
             }
+        }
+
+        public List<IdentiViewModel> FilterOutDuplicates(List<IdentiViewModel> identi)
+        {
+            var filteredList = new List<IdentiViewModel>();
+            var sifreIdenata = identi.Select(x => x.SifraIdenta);
+
+            foreach (var sifraIdenta in sifreIdenata)
+            {
+                if (!filteredList.Where(x => x.SifraIdenta == sifraIdenta).Any())
+                {
+                    filteredList.Add(identi.Where(x => x.SifraIdenta == sifraIdenta).First());
+                }
+            }
+
+            return filteredList;
         }
     }
 }
