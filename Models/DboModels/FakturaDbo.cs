@@ -19,8 +19,6 @@ namespace CSS_MagacinControl_App.Models.DboModels
         public string Magacioner { get; set; }
         public ICollection<IdentDbo> RobaZaPakovanjeItems { get; set; }
 
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
 
         public FakturaDbo(string brojFakture, DateTime datumFakture, string sifraKupca, string nazivKupca, string statusFakture)
         {

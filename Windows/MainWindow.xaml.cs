@@ -387,7 +387,7 @@ namespace CSS_MagacinControl_App
         {
             await SnimiZaNaknadniZavrsetak(false);
 
-            await Task.Delay(5000);
+            await Task.Delay(10000);
             base.OnClosed(e);
             Application.Current.Shutdown();
         }

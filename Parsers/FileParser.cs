@@ -44,6 +44,9 @@ namespace CSS_MagacinControl_App.Parsers
                                            .Distinct()
                                            .ToList();
 
+                // Compress divided objects after forming 'barCodeToNazivIdenta'.
+                identiViewModel = _fileParserRepository.FilterOutDuplicates(identiViewModel);
+
                 var brojPonavljanjaIstogIdenta = barCodeToNazivIdenta
                                         .GroupBy(x => x.Barkod)
                                         .Select(group => new CsvParseErrorModel
@@ -66,7 +69,7 @@ namespace CSS_MagacinControl_App.Parsers
 
                 var barKodMapDictionary = barCodeToNazivIdenta.ToDictionary(x => x.Barkod, x => x.NazivIdenta);
 
-                fileNames.ForEach(fileName => { File.Delete(fileName); });
+                //fileNames.ForEach(fileName => { File.Delete(fileName); });
 
                 return new FaktureIdentiViewModel()
                 {

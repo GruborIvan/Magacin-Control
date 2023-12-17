@@ -17,9 +17,8 @@ namespace CSS_MagacinControl_App.Models.DboModels
         public int KolicinaSaFakture { get; set; }
         public int PrimljenaKolicina { get; set; }
         public int Oznaka { get; set; }
+        public int Razlika { get; set; }
         public string OznakaUsluge { get; set; }
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
 
         public IdentDbo(Guid id, string sifraIdenta, string brojFakture, string nazivIdenta, int kolicinaSaFakture, int primljenaKolicina, int oznaka)
         {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSS_MagacinControl_App.Models.DboModels
@@ -10,8 +9,6 @@ namespace CSS_MagacinControl_App.Models.DboModels
         public Guid Id { get; set; }
         public string NazivIdenta { get; set; }
         public string BarkodIdenta { get; set; }
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
 
         public IdentBarkodDbo(Guid id, string nazivIdenta, string barkodIdenta)
         {
