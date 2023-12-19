@@ -5,6 +5,7 @@ using CSS_MagacinControl_App.Models.DboModels;
 using CSS_MagacinControl_App.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,15 +58,14 @@ namespace CSS_MagacinControl_App.Repository
             if (!String.IsNullOrEmpty(filter.BrojFakture))
                 query = query.Where(x => x.BrojFakture == filter.BrojFakture);
 
-            // Try to filter query by date => LATER
-
+            // Try to filter query by date.
             if (!String.IsNullOrEmpty(filter.PocetniDatum))
             {
                 var date = DateTime.Parse(filter.PocetniDatum);
                 query = query.Where(x => x.DatumFakture >= date);
             }
 
-            // Filter query by 'Status fakture'.
+            // Filter query by 'Status fakture' => 'U radu' or 'Zavrseno'.
             if (!String.IsNullOrEmpty(filter.StatusFakture))
                 query = query.Where(x => x.StatusFakture == filter.StatusFakture);
 
@@ -77,15 +77,21 @@ namespace CSS_MagacinControl_App.Repository
                 .SelectMany(x => x)
                 .ToList();
 
+            // Get Barcode-SifraIdenta
             var barkodIdentDbo = await _dbContext.IdentBarkod.ToListAsync();
 
-            var barCodeIdentDict = barkodIdentDbo.ToDictionary(x => x.BarkodIdenta, x => x.NazivIdenta);
+            var barCodeIdentDict = barkodIdentDbo.ToDictionary(x => x.BarkodIdenta, x => x.SifraIdenta);
 
+            // Map fakture and idents.
             var fakture = _mapper.Map<List<FaktureViewModel>>(result);
-
             var idents = _mapper.Map<List<IdentiViewModel>>(identDbos);
 
-            idents.Where(x => x.OznakaUsluge.StartsWith("7")).ToList().ForEach(x =>
+            // All Idents that have oznaka '7xx' shouldn't be scanned.
+            idents
+                .Where(x => !x.OznakaUsluge.IsNullOrEmpty())
+                .Where(x => x.OznakaUsluge.StartsWith("7"))
+                .ToList()
+                .ForEach(x =>
             {
                 x.KolicinaSaFakture = 0;
                 x.PripremljenaKolicina = 0;
@@ -124,17 +130,17 @@ namespace CSS_MagacinControl_App.Repository
             return faktura.Count > 0;
         }
 
-        public async Task<string> GetNazivIdentaByBarcodeAsync(string enteredBarcode)
+        public async Task<string> GetSifraIdentaByBarcodeAsync(string enteredBarcode)
         {
             using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var identFilter = await _dbContext.IdentBarkod
                               .Where(x => x.BarkodIdenta == enteredBarcode)
                               .ToListAsync();
 
-            if (identFilter.Count() == 0)
+            if (!identFilter.Any())
                 return null;
 
-            return identFilter.First().NazivIdenta;
+            return identFilter.First().SifraIdenta;
         }
 
         public async Task SaveIdentiAsync(List<IdentiViewModel> identi)
@@ -165,10 +171,10 @@ namespace CSS_MagacinControl_App.Repository
 
             foreach (var ident in identiList)
             {
-                var changedIdent = identiListDbo.Where(x => x.SifraIdenta == ident.SifraIdenta)
-                                         .Where(y => y.NazivIdenta == ident.NazivIdenta)
-                                         .ToList()
-                                         .FirstOrDefault();
+                var changedIdent = identiListDbo
+                                        .Where(x => x.SifraIdenta == ident.SifraIdenta)
+                                        .ToList()
+                                        .FirstOrDefault();
 
                 if (changedIdent != null)
                 {

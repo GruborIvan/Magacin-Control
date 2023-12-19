@@ -3,12 +3,12 @@
     public class BarkodMap
     {
         public string Barkod { get; set; }
-        public string NazivIdenta { get; set; }
+        public string SifraIdenta { get; set; }
 
-        public BarkodMap(string barkod, string nazivIdenta)
+        public BarkodMap(string barkod, string sifraIdenta)
         {
             Barkod = barkod;
-            NazivIdenta = nazivIdenta;
+            SifraIdenta = sifraIdenta;
         }
     }
 }

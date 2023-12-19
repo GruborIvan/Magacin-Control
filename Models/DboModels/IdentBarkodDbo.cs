@@ -7,13 +7,13 @@ namespace CSS_MagacinControl_App.Models.DboModels
     public class IdentBarkodDbo
     {
         public Guid Id { get; set; }
-        public string NazivIdenta { get; set; }
+        public string SifraIdenta { get; set; }
         public string BarkodIdenta { get; set; }
 
-        public IdentBarkodDbo(Guid id, string nazivIdenta, string barkodIdenta)
+        public IdentBarkodDbo(Guid id, string sifraIdenta, string barkodIdenta)
         {
             Id = id;
-            NazivIdenta = nazivIdenta;
+            SifraIdenta = sifraIdenta;
             BarkodIdenta = barkodIdenta;
         }
     }
