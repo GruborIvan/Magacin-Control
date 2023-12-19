@@ -413,10 +413,10 @@ namespace CSS_MagacinControl_App
 
         private void CalculateScannedAmounts(string barkod, string brojFakture, int kolicina)
         {
-            string identName = _identTrackViewModel.BarcodeToIdentDictionary[barkod];
+            string sifraIdenta = _identTrackViewModel.BarcodeToIdentDictionary[barkod];
 
             var scannedIdent = _identTrackViewModel.IdentState
-                    .Where(x => x.SifraIdenta == identName)
+                    .Where(x => x.SifraIdenta == sifraIdenta)
                     .Where(x => x.BrojFakture == brojFakture)
                     .FirstOrDefault();
 
