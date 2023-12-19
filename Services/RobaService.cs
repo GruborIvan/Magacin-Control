@@ -68,7 +68,7 @@ namespace CSS_MagacinControl_App.Services
 
         public async Task<string> GetNazivIdentaByBarcodeAsync(string enteredBarcode)
         {
-            return await _robaRepository.GetNazivIdentaByBarcodeAsync(enteredBarcode);
+            return await _robaRepository.GetSifraIdentaByBarcodeAsync(enteredBarcode);
         }
 
         public async Task SaveFakturaAndItemsAsync(IdentTrackViewModel dataModel)

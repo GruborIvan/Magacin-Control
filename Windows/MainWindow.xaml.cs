@@ -416,7 +416,7 @@ namespace CSS_MagacinControl_App
             string identName = _identTrackViewModel.BarcodeToIdentDictionary[barkod];
 
             var scannedIdent = _identTrackViewModel.IdentState
-                    .Where(x => x.NazivIdenta == identName)
+                    .Where(x => x.SifraIdenta == identName)
                     .Where(x => x.BrojFakture == brojFakture)
                     .FirstOrDefault();
 

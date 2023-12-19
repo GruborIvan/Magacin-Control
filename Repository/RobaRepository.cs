@@ -79,7 +79,7 @@ namespace CSS_MagacinControl_App.Repository
 
             var barkodIdentDbo = await _dbContext.IdentBarkod.ToListAsync();
 
-            var barCodeIdentDict = barkodIdentDbo.ToDictionary(x => x.BarkodIdenta, x => x.NazivIdenta);
+            var barCodeIdentDict = barkodIdentDbo.ToDictionary(x => x.BarkodIdenta, x => x.SifraIdenta);
 
             var fakture = _mapper.Map<List<FaktureViewModel>>(result);
 
@@ -124,17 +124,17 @@ namespace CSS_MagacinControl_App.Repository
             return faktura.Count > 0;
         }
 
-        public async Task<string> GetNazivIdentaByBarcodeAsync(string enteredBarcode)
+        public async Task<string> GetSifraIdentaByBarcodeAsync(string enteredBarcode)
         {
             using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             var identFilter = await _dbContext.IdentBarkod
                               .Where(x => x.BarkodIdenta == enteredBarcode)
                               .ToListAsync();
 
-            if (identFilter.Count() == 0)
+            if (!identFilter.Any())
                 return null;
 
-            return identFilter.First().NazivIdenta;
+            return identFilter.First().SifraIdenta;
         }
 
         public async Task SaveIdentiAsync(List<IdentiViewModel> identi)
@@ -165,10 +165,10 @@ namespace CSS_MagacinControl_App.Repository
 
             foreach (var ident in identiList)
             {
-                var changedIdent = identiListDbo.Where(x => x.SifraIdenta == ident.SifraIdenta)
-                                         .Where(y => y.NazivIdenta == ident.NazivIdenta)
-                                         .ToList()
-                                         .FirstOrDefault();
+                var changedIdent = identiListDbo
+                                        .Where(x => x.SifraIdenta == ident.SifraIdenta)
+                                        .ToList()
+                                        .FirstOrDefault();
 
                 if (changedIdent != null)
                 {

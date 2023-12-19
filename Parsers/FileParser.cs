@@ -39,22 +39,22 @@ namespace CSS_MagacinControl_App.Parsers
 
                 _fileParserRepository.CorrectAmountsForServices(identiViewModel);
 
-                var barCodeToNazivIdenta = identiViewModel
-                                           .Select(o => new BarkodMap(o.Barkod, o.NazivIdenta))
+                var barCodeToSifraIdenta = identiViewModel
+                                           .Select(o => new BarkodMap(o.Barkod, o.SifraIdenta))
                                            .Distinct()
                                            .ToList();
 
                 // Compress divided objects after forming 'barCodeToNazivIdenta'.
                 identiViewModel = _fileParserRepository.FilterOutDuplicates(identiViewModel);
 
-                var brojPonavljanjaIstogIdenta = barCodeToNazivIdenta
+                var brojPonavljanjaIstogIdenta = barCodeToSifraIdenta
                                         .GroupBy(x => x.Barkod)
                                         .Select(group => new CsvParseErrorModel
                                         {
                                             Value = group.Key,
                                             Count = group.Count(),
-                                            NaziviIdenta = barCodeToNazivIdenta.Where(x => x.Barkod == group.Key)
-                                                                               .Select(x => x.NazivIdenta)
+                                            NaziviIdenta = barCodeToSifraIdenta.Where(x => x.Barkod == group.Key)
+                                                                               .Select(x => x.SifraIdenta)
                                                                                .ToList()
                                         })
                                         .Where(x => x.Count > 1)
@@ -67,9 +67,9 @@ namespace CSS_MagacinControl_App.Parsers
                     return null;
                 }
 
-                var barKodMapDictionary = barCodeToNazivIdenta.ToDictionary(x => x.Barkod, x => x.NazivIdenta);
+                var barKodMapDictionary = barCodeToSifraIdenta.ToDictionary(x => x.Barkod, x => x.SifraIdenta);
 
-                //fileNames.ForEach(fileName => { File.Delete(fileName); });
+                fileNames.ForEach(fileName => { File.Delete(fileName); });
 
                 return new FaktureIdentiViewModel()
                 {
