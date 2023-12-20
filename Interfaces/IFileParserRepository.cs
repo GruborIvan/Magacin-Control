@@ -10,6 +10,6 @@ namespace CSS_MagacinControl_App.Interfaces
         Task<List<IdentiViewModel>> ReadIdentiFromCsvFileAsync(string identiFileName, string kolicineFileName, string brojFakture);
         void CreateOutputDirectoryIfNotExists(string outputPath);
         void CorrectAmountsForServices(List<IdentiViewModel> identi);
-        List<IdentiViewModel> FilterOutDuplicates(List<IdentiViewModel> identi);
+        List<IdentiViewModel> FilterOutDuplicates(List<IdentiViewModel> identiViewModel);
     }
 }

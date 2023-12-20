@@ -7,11 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace CSS_MagacinControl_App
@@ -178,6 +176,12 @@ namespace CSS_MagacinControl_App
 
         private async void FilterButton_Click(object sender, RoutedEventArgs e)
         {
+            // If accidently clicked, save changes.
+            if (_identTrackViewModel.FaktureState.Count == 1)
+            {
+                await SnimiZaNaknadniZavrsetak(false);
+            }
+
             var filters = Load_SelectedFilters();
 
             var result = await _robaService.GetFilteredFaktureAsync(filters);
@@ -189,6 +193,12 @@ namespace CSS_MagacinControl_App
 
         private async void RemoveFilterButton_Click(object sender, RoutedEventArgs e)
         {
+            // If accidently clicked, save changes.
+            if (_identTrackViewModel.FaktureState.Count == 1)
+            {
+                await SnimiZaNaknadniZavrsetak(false);
+            }
+
             ClearFilters();
             var filters = Load_SelectedFilters();
             filters.BrojFakture = String.Empty;
@@ -309,6 +319,7 @@ namespace CSS_MagacinControl_App
 
             ChangeCurrentState(result);
             dialogHandler.GetUspesnoSnimljenoZaZavrsetakDialog(selectedFaktura.BrojFakture);
+
             ZavrsetakButton.IsEnabled = true;
         }
 

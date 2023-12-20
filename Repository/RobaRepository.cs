@@ -163,13 +163,19 @@ namespace CSS_MagacinControl_App.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateIdentiAsync(List<IdentiViewModel> identi)
+        public async Task UpdateIdentiAsync(List<IdentiViewModel> identi, string brojFakture)
         {
+            // Pronaci idente u bazi po sifri identa i broju fakture.
+            // Samo te idente updateovati.
             using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
+            
             var identiListDbo = _mapper.Map<IEnumerable<IdentDbo>>(identi);
-            List<IdentDbo> identiList = _dbContext.RobaZaPakovanjeItem.ToList();
 
-            foreach (var ident in identiList)
+            var identiDbList = await _dbContext.RobaZaPakovanjeItem
+                                                .Where(x => x.BrojFakture == brojFakture)
+                                                .ToListAsync();
+
+            foreach (var ident in identiDbList)
             {
                 var changedIdent = identiListDbo
                                         .Where(x => x.SifraIdenta == ident.SifraIdenta)
@@ -192,7 +198,7 @@ namespace CSS_MagacinControl_App.Repository
             var checkFaktura = await _dbContext.RobaZaPakovanje.FindAsync(brojFakture);
             checkFaktura.StatusFakture = "Završeno";
 
-            _dbContext.Entry<FakturaDbo>(checkFaktura).State = EntityState.Modified;
+            _dbContext.Entry(checkFaktura).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
     }

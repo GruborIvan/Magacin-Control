@@ -1,4 +1,5 @@
 ﻿using CSS_MagacinControl_App.Models.DboModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
@@ -21,6 +22,19 @@ namespace CSS_MagacinControl_App.Migrations.DbInitialize
             }
 
             context.SaveChanges();
+        }
+
+        public async static void DeleteUnusedBarcodeIdentRelations(AppDbContext context)
+        {
+            await context.Database.ExecuteSqlAsync($@"
+                delete _css_IdentBarKod
+                where SifraIdenta not in
+                (SELECT distinct kod.SifraIdenta
+                  FROM _css_IdentBarKod kod, _css_RobaZaPakovanje_item stavka, _css_RobaZaPakovanje_hd zaglavlje
+                  WHERE kod.SifraIdenta = stavka.SifraIdenta
+                  AND stavka.BrojFakture = zaglavlje.BrojFakture 
+                  AND zaglavlje.StatusFakture = 'U radu')
+            ");
         }
     }
 }

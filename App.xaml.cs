@@ -78,10 +78,11 @@ namespace CSS_MagacinControl_App
             {
                 // Make sure that the database is up to date with migrations.
                 // Seed initial admin user to the system.
-                var dbCtx = new AppDbContext();
-                dbCtx.Database.Migrate();
-                DbInitializer.Initialize(dbCtx);
-
+                var dbContext = new AppDbContext();
+                dbContext.Database.Migrate();
+                DbInitializer.Initialize(dbContext);
+                DbInitializer.DeleteUnusedBarcodeIdentRelations(dbContext);
+                
                 var startupForm = AppHost.Services.GetRequiredService<AuthenticationWindow>();
                 startupForm.Show();
 

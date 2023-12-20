@@ -14,7 +14,7 @@ namespace CSS_MagacinControl_App.Interfaces
         Task<FaktureIdentiViewModel> GetFilteredFakturaDataAsync(FilterModel filter);
         Task<bool> SaveFakturaAsync(FaktureViewModel faktura);
         Task SaveIdentiAsync(List<IdentiViewModel> identi);
-        Task UpdateIdentiAsync(List<IdentiViewModel> identi);
+        Task UpdateIdentiAsync(List<IdentiViewModel> identi, string brojFakture);
         Task SaveIdentBarcodeRelationAsync(List<IdentBarkodDbo> identBarkodRelations);
         Task<bool> CheckIfFakturaAlreadyExistsAsync(string brojFakture);
         Task<string> GetSifraIdentaByBarcodeAsync(string enteredBarcode);
