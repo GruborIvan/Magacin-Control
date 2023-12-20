@@ -98,7 +98,8 @@ namespace CSS_MagacinControl_App.Services
                 }
                 else
                 {
-                    await _robaRepository.UpdateIdentiAsync(dataModel.IdentState);
+                    var brojFakture = dataModel.FaktureState.FirstOrDefault().BrojFakture;
+                    await _robaRepository.UpdateIdentiAsync(dataModel.IdentState, brojFakture);
                 }
             }
             catch (Exception e)
