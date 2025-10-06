@@ -4,16 +4,87 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Glavni prozor" 
-        Height="{x:Static SystemParameters.PrimaryScreenHeight}" 
+        Title="Glavni prozor"
+        Height="{x:Static SystemParameters.PrimaryScreenHeight}"
         Width="{x:Static SystemParameters.PrimaryScreenWidth}">
+
+    <!-- ========== GLOBAL RESOURCES (colors, spacing, styles) ========== -->
     <Window.Resources>
+
+        <!-- Colors -->
+        <SolidColorBrush x:Key="AppBg" Color="#ADD8E6"/>
+        <!-- LightBlue -->
+        <SolidColorBrush x:Key="BtnPrimaryBg" Color="#f54b31"/>
+        <!-- red/orange -->
+        <SolidColorBrush x:Key="BtnSecondaryBg" Color="#e6bfad"/>
+        <!-- beige -->
+        <SolidColorBrush x:Key="BtnHoverOverlay" Color="#22000000"/>
+        <SolidColorBrush x:Key="BtnContent" Color="White"/>
+        <SolidColorBrush x:Key="BtnContentDark" Color="#222"/>
+
+        <!-- Spacing -->
+        <Thickness x:Key="BtnPadding">10,6,10,6</Thickness>
+        <CornerRadius x:Key="BtnCorner">5</CornerRadius>
+
+        <!-- DataGrid header center alignment -->
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
+
+        <!-- Base rounded Button template -->
+        <ControlTemplate x:Key="RoundedButtonTemplate" TargetType="Button">
+            <Border x:Name="Root"
+                    CornerRadius="{StaticResource BtnCorner}"
+                    Background="{TemplateBinding Background}"
+                    SnapsToDevicePixels="True">
+                <Grid>
+                    <ContentPresenter
+                        Margin="{TemplateBinding Padding}"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        RecognizesAccessKey="True"/>
+                    <!-- simple hover overlay -->
+                    <Border x:Name="Hover"
+                            Background="{StaticResource BtnHoverOverlay}"
+                            Opacity="0"/>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Hover" Property="Opacity" Value="1"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="Root" Property="Opacity" Value="0.6"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <!-- Button variants -->
+        <Style x:Key="ButtonPrimary" TargetType="Button">
+            <Setter Property="Template" Value="{StaticResource RoundedButtonTemplate}"/>
+            <Setter Property="Background" Value="{StaticResource BtnPrimaryBg}"/>
+            <Setter Property="Foreground" Value="{StaticResource BtnContent}"/>
+            <Setter Property="Padding" Value="{StaticResource BtnPadding}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ButtonSecondary" TargetType="Button" BasedOn="{StaticResource ButtonPrimary}">
+            <Setter Property="Background" Value="{StaticResource BtnSecondaryBg}"/>
+            <Setter Property="Foreground" Value="{StaticResource BtnContentDark}"/>
+        </Style>
+
+        <!-- Small utility label style for section titles -->
+        <Style x:Key="SectionLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
     </Window.Resources>
-    <Border Background="LightBlue">
+
+    <Border Background="{StaticResource AppBg}">
         <Viewbox x:Name="MyCanvas">
+            <!-- NOTE: grid/row/column and ALL element margins/coords stay identical -->
             <Grid Width="1104" Margin="0,28,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="961*"/>
@@ -24,71 +95,146 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <DataGrid Name="FaktureGrid" Height="175" HorizontalAlignment="Left" MouseDoubleClick="FaktureGrid_MouseDoubleClick" IsReadOnly="True" ColumnWidth="*" Margin="308,35,0,0" VerticalAlignment="Top" Width="767" Grid.ColumnSpan="2" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False">
+                <!-- Fakture grid -->
+                <DataGrid Name="FaktureGrid"
+                          Height="175"
+                          HorizontalAlignment="Left"
+                          MouseDoubleClick="FaktureGrid_MouseDoubleClick"
+                          IsReadOnly="True"
+                          ColumnWidth="*"
+                          Margin="308,35,0,0"
+                          VerticalAlignment="Top"
+                          Width="767"
+                          Grid.ColumnSpan="2"
+                          CanUserResizeColumns="False"
+                          CanUserResizeRows="False"
+                          AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Broj fakture" Width="4*" Binding="{Binding BrojFakture}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Datum fakture" Width="4*" Binding="{Binding DatumFakture}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Sifra kupca" Width="4.5*" Binding="{Binding SifraKupca}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Naziv kupca" Width="5*" Binding="{Binding NazivKupca}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Magacioner" Width="3*" Binding="{Binding Magacioner}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Status fakture" Width="3*" Binding="{Binding Status}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Broj fakture" Width="4*"  Binding="{Binding BrojFakture}"   HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Datum fakture" Width="4*" Binding="{Binding DatumFakture}"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Sifra kupca" Width="4.5*" Binding="{Binding SifraKupca}"    HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Naziv kupca" Width="5*"   Binding="{Binding NazivKupca}"    HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Magacioner" Width="3*"    Binding="{Binding Magacioner}"    HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Status fakture" Width="3*" Binding="{Binding Status}"       HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <DataGrid ItemsSource="{Binding Path=_identTrackViewModel.IdentState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="235" HorizontalAlignment="Left" ColumnWidth="*" IsReadOnly="True" Margin="309,298,0,0" 
-                      Name="FaktureIdenti" VerticalAlignment="Top" Width="768" Grid.RowSpan="2" CanUserResizeColumns="False" CanUserResizeRows="False"
-                      AutoGenerateColumns="False" Grid.ColumnSpan="2">
+                <!-- Identi grid -->
+                <DataGrid Name="FaktureIdenti"
+                          CanUserSortColumns="True"
+                          ItemsSource="{Binding IdentState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Height="235"
+                          HorizontalAlignment="Left"
+                          ColumnWidth="*"
+                          IsReadOnly="True"
+                          Margin="309,298,0,0"
+                          VerticalAlignment="Top"
+                          Width="768"
+                          Grid.RowSpan="2"
+                          CanUserResizeColumns="False"
+                          CanUserResizeRows="False"
+                          AutoGenerateColumns="False"
+                          Grid.ColumnSpan="2">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Sifra identa" Width="3*" Binding="{Binding SifraIdenta}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Naziv identa" Width="10*" Binding="{Binding NazivIdenta}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Kolicina sa fakture" Width="4.5*" Binding="{Binding KolicinaSaFakture}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Pripremljena kolicina" Width="5*" Binding="{Binding PripremljenaKolicina}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Razlika" Width="3*" Binding="{Binding Razlika}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Sifra identa" Width="3*" SortMemberPath="SifraIdenta"   Binding="{Binding SifraIdenta}"         HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Naziv identa" Width="10*" SortMemberPath="SifraIdenta"  Binding="{Binding NazivIdenta}"         HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Kolicina sa fakture" Width="4.5*" SortMemberPath="SifraIdenta" Binding="{Binding KolicinaSaFakture}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Pripremljena kolicina" Width="5*" SortMemberPath="SifraIdenta"  Binding="{Binding PripremljenaKolicina}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn Header="Razlika" Width="3*" SortMemberPath="SifraIdenta" Binding="{Binding Razlika}"              HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
                     </DataGrid.Columns>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <!-- ensure Background is a SolidColorBrush we can animate -->
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="Transparent"/>
+                                </Setter.Value>
+                            </Setter>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsRecentlyScanned}" Value="True">
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <!-- ~1 second total: 0.15 up + 0.15 down, repeated -->
+                                                <ColorAnimation
+                                    Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
+                                    To="#FFFF6666"
+                                    Duration="0:0:0.20"
+                                    AutoReverse="True"
+                                    RepeatBehavior="4x"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
 
-                <Button Name="LogoutButton" Content="Izloguj se" Background="#f54b31" HorizontalAlignment="Left" Margin="24,-27,0,0" VerticalAlignment="Top" Height="34" Width="90" Click="LogoutButton_Click" RenderTransformOrigin="0.466,0.17" Grid.Column="1">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="5"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
+                <!-- Top-right buttons -->
+                <Button Name="LogoutButton"
+                        Content="Izloguj se"
+                        Style="{StaticResource ButtonPrimary}"
+                        HorizontalAlignment="Left"
+                        Margin="24,-27,0,0"
+                        VerticalAlignment="Top"
+                        Height="34"
+                        Width="90"
+                        Click="LogoutButton_Click"
+                        RenderTransformOrigin="0.466,0.17"
+                        Grid.Column="1"/>
 
-                <Button Name="AdminPreferencesButton" Background="#e6bfad" Content="Administrator" HorizontalAlignment="Left" Margin="871,-27,0,0" VerticalAlignment="Top" Height="34" Width="90" Click="AdminPreferencesButton_Click">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="5"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
+                <Button Name="AdminPreferencesButton"
+                        Content="Administrator"
+                        Style="{StaticResource ButtonSecondary}"
+                        HorizontalAlignment="Left"
+                        Margin="855,-27,0,0"
+                        VerticalAlignment="Top"
+                        Height="34"
+                        Width="106"
+                        Click="AdminPreferencesButton_Click"/>
 
-                <Label Content="Fakture:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" Margin="308,10,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
-                <Label Content="Identi:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,272,561,0" VerticalAlignment="Top" Height="26" Width="91"/>
+                <!-- Section labels -->
+                <Label Content="Fakture:" Style="{StaticResource SectionLabel}" HorizontalAlignment="Left" Margin="308,10,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
+                <Label Content="Identi:"  Style="{StaticResource SectionLabel}" HorizontalAlignment="Right" Margin="0,272,561,0" VerticalAlignment="Top" Height="26" Width="91"/>
 
+                <!-- Scan canvas (unchanged layout) -->
                 <Canvas Name="ScanCanvas" Margin="10,298,652,71">
-                    <TextBox Name="BarCodeTextBox" FontSize="22" Height="35" Width="196" TextWrapping="Wrap" TextAlignment="Center" Text="" Canvas.Top="32" KeyDown="BarCodeTextBox_KeyDown" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="10"/>
+                    <TextBox Name="BarCodeTextBox" FontSize="22" Height="35" Width="196" TextWrapping="Wrap" TextAlignment="Center" Text=""
+                             Canvas.Top="32" KeyDown="BarCodeTextBox_KeyDown" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="10"/>
                     <Label Content="Unos bar koda:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Height="27" Width="128" Canvas.Left="61"/>
-                    <TextBox x:Name="KolicinaBarKodTextBox" IsEnabled="False" KeyDown="KolicinaBarKod_KeyDown" Canvas.Left="224" FontSize="22" TextWrapping="Wrap" Text="" Canvas.Top="32" Width="60" HorizontalAlignment="Left" Height="35" VerticalAlignment="Center"/>
+                    <TextBox x:Name="KolicinaBarKodTextBox" IsEnabled="False" KeyDown="KolicinaBarKod_KeyDown" Canvas.Left="224" FontSize="22" TextWrapping="Wrap" Text=""
+                             Canvas.Top="32" Width="60" HorizontalAlignment="Left" Height="35" VerticalAlignment="Center"/>
                     <Label Name="KolicineLabel" Content="Količina:" FontWeight="Bold" Canvas.Left="224" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="2"/>
                 </Canvas>
-                <Canvas Name="SnimiEndCanvas" Margin="14,395,675,-5" Grid.RowSpan="2">
-                    <Button Name="SnimiZaNaknadniZavrsetakButton" Background="#e6bfad" FontSize="13" Content="Snimi za naknadni završetak" Canvas.Left="23" HorizontalAlignment="Left" VerticalAlignment="Top" Height="51" Width="226" Click="SnimiZaNaknadniZavrsetakButton_Click">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                    <Button Name="ZavrsetakButton" Background="#f54b31" FontSize="16" Content="Završetak" Canvas.Left="23" Canvas.Top="75" Height="51" Width="226" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ZavrsetakButton_Click">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+
+                <!-- Save/Finish canvas (unchanged layout) -->
+                <Canvas x:Name="SnimiEndCanvas" Margin="14,395,675,-5" Grid.RowSpan="2">
+                    <Button Name="SnimiZaNaknadniZavrsetakButton"
+                            Content="Snimi za naknadni završetak"
+                            Style="{StaticResource ButtonSecondary}"
+                            FontSize="13"
+                            Canvas.Left="23"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Height="51"
+                            Width="226"
+                            Click="SnimiZaNaknadniZavrsetakButton_Click"/>
+                    <Button Name="ZavrsetakButton"
+                            Content="Završetak"
+                            Style="{StaticResource ButtonPrimary}"
+                            FontSize="16"
+                            Canvas.Left="23"
+                            Canvas.Top="75"
+                            Height="51"
+                            Width="226"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Click="ZavrsetakButton_Click"/>
                 </Canvas>
 
+                <!-- Filters canvas (unchanged layout) -->
                 <Canvas x:Name="FiltersCanvas" Margin="16,51,676,183" Background="#71bbd4">
                     <Label Content="Filteri:" FontWeight="Bold" FontSize="16" Height="37" Width="68" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="100"/>
                     <Label Content="Broj fakture:" Height="26" Width="75" HorizontalAlignment="Center" Canvas.Top="42" VerticalAlignment="Top" Canvas.Left="10"/>
@@ -97,42 +243,30 @@
                     <DatePicker x:Name="DatePickerFilter" Width="126" Height="24" HorizontalAlignment="Left" Canvas.Left="131" Canvas.Top="83" VerticalAlignment="Top"/>
                     <Label Content="Status:" Height="26" Width="45" HorizontalAlignment="Left" Canvas.Left="13" Canvas.Top="127" VerticalAlignment="Top"/>
                     <ComboBox x:Name="StatusComboBox" Width="126" Height="22" HorizontalAlignment="Left" Canvas.Left="131" Canvas.Top="127" VerticalAlignment="Top"/>
-                    <Button x:Name="FilterButton" Background="#e6bfad" Content="Filtriraj" FontSize="13" Height="36" Width="100" Click="FilterButton_Click" HorizontalAlignment="Center" Canvas.Left="13" Canvas.Top="176" VerticalAlignment="Top">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                    <Button x:Name="RemoveFilterButton" Background="#f54b31" Content="Ukloni filter" FontSize="13" Height="35" Width="100" Click="RemoveFilterButton_Click" HorizontalAlignment="Center" Canvas.Left="144" Canvas.Top="177" VerticalAlignment="Top">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                    <Button x:Name="FilterButton" Content="Filtriraj" FontSize="13" Height="36" Width="100"
+                            Style="{StaticResource ButtonSecondary}"
+                            Click="FilterButton_Click" HorizontalAlignment="Center" Canvas.Left="13" Canvas.Top="176" VerticalAlignment="Top"/>
+                    <Button x:Name="RemoveFilterButton" Content="Ukloni filter" FontSize="13" Height="35" Width="100"
+                            Style="{StaticResource ButtonPrimary}"
+                            Click="RemoveFilterButton_Click" HorizontalAlignment="Center" Canvas.Left="144" Canvas.Top="177" VerticalAlignment="Top"/>
                 </Canvas>
+
+                <!-- Export / counts canvas (unchanged layout) -->
                 <Canvas Margin="308,213,29,176" Grid.ColumnSpan="2">
                     <Label Content="Ukupno faktura: " Height="26" Width="96" HorizontalAlignment="Left" Canvas.Top="2" VerticalAlignment="Top"/>
                     <Label x:Name="UkupnoFakturaLabel" Content="" Height="26" Width="63" HorizontalAlignment="Left" Canvas.Left="101" Canvas.Top="2" VerticalAlignment="Top"/>
-                    <Button x:Name="IzvozUCsvButton" Content="Izvezi u .Csv" FontSize="14" Background="#e6bfad" Canvas.Left="637" Canvas.Top="25" HorizontalAlignment="Center" VerticalAlignment="Top" Height="37" Width="120" Click="IzvozUCsvButton_Click">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                    <Button x:Name="IzvozUCsvButton" Content="Izvezi u .Csv" FontSize="14"
+                            Style="{StaticResource ButtonSecondary}"
+                            Canvas.Left="637" Canvas.Top="25" HorizontalAlignment="Center" VerticalAlignment="Top" Height="37" Width="120" Click="IzvozUCsvButton_Click"/>
                 </Canvas>
+
+                <!-- File load canvas (unchanged layout) -->
                 <Canvas Margin="14,-37,658,425">
                     <Label FontSize="15" Content="Učitavanje podataka iz fajla:" Height="36" Width="197" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBox TextWrapping="Wrap" Text="" Width="174" Height="34" x:Name="FileNameTextBox" HorizontalAlignment="Center" Canvas.Top="31" VerticalAlignment="Top" IsReadOnly="True"/>
-                    <Button x:Name="UcitajButton" Content="Učitaj" Background="#e6bfad" Height="34" Width="90" Click="UcitajButton_Click" HorizontalAlignment="Center" Canvas.Left="179" Canvas.Top="31" VerticalAlignment="Top">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                    <Button x:Name="UcitajButton" Content="Učitaj"
+                            Style="{StaticResource ButtonSecondary}"
+                            Height="34" Width="90" Click="UcitajButton_Click" HorizontalAlignment="Center" Canvas.Left="179" Canvas.Top="31" VerticalAlignment="Top"/>
                 </Canvas>
 
             </Grid>

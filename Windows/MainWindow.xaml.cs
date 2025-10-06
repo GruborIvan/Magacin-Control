@@ -359,7 +359,7 @@ namespace CSS_MagacinControl_App
             await SnimiZaNaknadniZavrsetak(isUserClicked: true);
         }
 
-        private void BarCodeTextBox_KeyDown(object sender, KeyEventArgs e)
+        private async void BarCodeTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
@@ -374,6 +374,7 @@ namespace CSS_MagacinControl_App
                 }
 
                 CalculateScannedAmounts(barCode, brojFakture, 1);
+                await FlashRowAsync(barCode, brojFakture);
             }
         }
 
@@ -403,7 +404,7 @@ namespace CSS_MagacinControl_App
             Application.Current.Shutdown();
         }
 
-        private void KolicinaBarKod_KeyDown(object sender, KeyEventArgs e)
+        private async void KolicinaBarKod_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) 
                 return;
@@ -418,6 +419,9 @@ namespace CSS_MagacinControl_App
             string brojFakture = _identTrackViewModel.FaktureState.First().BrojFakture;
             
             CalculateScannedAmounts(barkod, brojFakture, kolicina);
+            await FlashRowAsync(barkod, brojFakture);
+
+            // Ovde je logika kad se ucita proizvod..
             KolicinaBarKodTextBox.Text = string.Empty;
             KolicinaBarKodTextBox.IsEnabled = false;
         }
@@ -450,17 +454,39 @@ namespace CSS_MagacinControl_App
 
                 scannedIdent.PripremljenaKolicina = scannedIdent.PripremljenaKolicina + kolicina;
                 scannedIdent.Razlika = scannedIdent.KolicinaSaFakture - scannedIdent.PripremljenaKolicina;
-
-                FaktureIdenti.ItemsSource = null;
-                FaktureIdenti.ItemsSource = _identTrackViewModel.IdentState;
             }
             else
             {
-                // Show dialog for Wrong Barcode scanned.
                 dialogHandler.GetWrongBarCodeDialog();
             }
 
             BarCodeTextBox.Text = String.Empty;
+        }
+
+        private async Task FlashRowAsync(string barkod, string brojFakture)
+        {
+            string sifraIdenta = _identTrackViewModel.BarcodeToIdentDictionary[barkod];
+
+            var scannedIdent = _identTrackViewModel.IdentState
+                    .Where(x => x.SifraIdenta == sifraIdenta)
+                    .Where(x => x.BrojFakture == brojFakture)
+                    .FirstOrDefault();
+
+            if (scannedIdent == null) return;
+
+            scannedIdent.IsRecentlyScanned = true;
+
+            // Optional: bring it into view and/or select it
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                FaktureIdenti.UpdateLayout();
+                FaktureIdenti.ScrollIntoView(scannedIdent);
+                var row = (DataGridRow)FaktureIdenti.ItemContainerGenerator.ContainerFromItem(scannedIdent);
+                row?.BringIntoView();
+            });
+
+            await Task.Delay(2000);
+            scannedIdent.IsRecentlyScanned = false;
         }
     }
 }
