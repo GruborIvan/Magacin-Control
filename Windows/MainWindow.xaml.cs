@@ -359,25 +359,6 @@ namespace CSS_MagacinControl_App
             await SnimiZaNaknadniZavrsetak(isUserClicked: true);
         }
 
-        private async void BarCodeTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                string barCode = BarCodeTextBox.Text;
-                string brojFakture = _identTrackViewModel.FaktureState.First().BrojFakture;
-
-                if (!_identTrackViewModel.BarcodeToIdentDictionary.ContainsKey(barCode))
-                {
-                    dialogHandler.GetWrongBarCodeDialog();
-                    BarCodeTextBox.Text = String.Empty;
-                    return;
-                }
-
-                CalculateScannedAmounts(barCode, brojFakture, 1);
-                await FlashRowAsync(barCode, brojFakture);
-            }
-        }
-
         private void IzvozUCsvButton_Click(object sender, RoutedEventArgs e)
         {
             var faktura = _identTrackViewModel.FaktureState.First();
@@ -404,6 +385,26 @@ namespace CSS_MagacinControl_App
             Application.Current.Shutdown();
         }
 
+        private async void BarCodeTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string barCode = BarCodeTextBox.Text;
+                string brojFakture = _identTrackViewModel.FaktureState.First().BrojFakture;
+
+                if (!_identTrackViewModel.BarcodeToIdentDictionary.ContainsKey(barCode))
+                {
+                    dialogHandler.GetWrongBarCodeDialog();
+                    BarCodeTextBox.Text = String.Empty;
+                    return;
+                }
+
+                CalculateScannedAmounts(barCode, brojFakture, 1);
+                ShowLastScannedArticle(barCode);
+                await FlashRowAsync(barCode, brojFakture);
+            }
+        }
+
         private async void KolicinaBarKod_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) 
@@ -415,11 +416,12 @@ namespace CSS_MagacinControl_App
                 return;
             }
 
-            var barkod = BarCodeTextBox.Text;
+            var barCode = BarCodeTextBox.Text;
             string brojFakture = _identTrackViewModel.FaktureState.First().BrojFakture;
             
-            CalculateScannedAmounts(barkod, brojFakture, kolicina);
-            await FlashRowAsync(barkod, brojFakture);
+            CalculateScannedAmounts(barCode, brojFakture, kolicina);
+            ShowLastScannedArticle(barCode, kolicina);
+            await FlashRowAsync(barCode, brojFakture);
 
             // Ovde je logika kad se ucita proizvod..
             KolicinaBarKodTextBox.Text = string.Empty;
@@ -487,6 +489,13 @@ namespace CSS_MagacinControl_App
 
             await Task.Delay(2000);
             scannedIdent.IsRecentlyScanned = false;
+        }
+    
+        private void ShowLastScannedArticle(string barCode, int kolicina = 1)
+        {
+            var scannedIdent = _identTrackViewModel.GetIdentByBarCode(barCode);
+            var scannedArticleTextToDisplay = $"{scannedIdent.NazivIdenta}   Kolicina: {kolicina}";
+            LastScannedArticleLabel.Content = scannedArticleTextToDisplay;
         }
     }
 }

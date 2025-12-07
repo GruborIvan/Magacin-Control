@@ -1,5 +1,6 @@
 ﻿using CSS_MagacinControl_App.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CSS_MagacinControl_App.Models
 {
@@ -8,5 +9,10 @@ namespace CSS_MagacinControl_App.Models
         public List<FaktureViewModel> FaktureState { get; set; }
         public List<IdentiViewModel> IdentState { get; set; }
         public Dictionary<string, string> BarcodeToIdentDictionary { get; set; }
+
+        public IdentiViewModel GetIdentByBarCode(string barCode)
+        {
+            return IdentState.Where(x => x.Barkod.Equals(barCode)).FirstOrDefault();
+        }
     }
 }

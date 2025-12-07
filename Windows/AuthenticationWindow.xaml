@@ -15,7 +15,7 @@
                     <TextBox x:Name="UserBox" FontSize="22" TextWrapping="NoWrap" Height="33" Canvas.Left="109" Canvas.Top="89" VerticalAlignment="Center" Width="182" HorizontalAlignment="Left"/>
                     <Label Content="Lozinka:" FontSize="18" Height="30" Canvas.Left="161" Canvas.Top="169" VerticalAlignment="Center" Width="96" HorizontalAlignment="Left"/>
                     <PasswordBox x:Name="PassBox" FontSize="22" Height="33" Foreground="DarkBlue" Canvas.Left="109" Canvas.Top="204" VerticalAlignment="Center" Width="182" HorizontalAlignment="Left" />
-                    <Button x:Name="LoginButton" Background="#e6bfad" IsDefault="True" Content="Prijavite se" FontSize="18" Height="41" Click="LoginButton_Click" Width="114" HorizontalAlignment="Left" Canvas.Left="143" Canvas.Top="297" VerticalAlignment="Top">
+                    <Button x:Name="LoginButton" Background="#dde4df" IsDefault="True" Content="Prijavite se" FontSize="18" Height="41" Click="LoginButton_Click" Width="128" HorizontalAlignment="Left" Canvas.Left="136" Canvas.Top="299" VerticalAlignment="Top">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="5"/>

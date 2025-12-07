@@ -16,7 +16,7 @@
         <!-- LightBlue -->
         <SolidColorBrush x:Key="BtnPrimaryBg" Color="#f54b31"/>
         <!-- red/orange -->
-        <SolidColorBrush x:Key="BtnSecondaryBg" Color="#e6bfad"/>
+        <SolidColorBrush x:Key="BtnSecondaryBg" Color="#dde4df"/>
         <!-- beige -->
         <SolidColorBrush x:Key="BtnHoverOverlay" Color="#22000000"/>
         <SolidColorBrush x:Key="BtnContent" Color="White"/>
@@ -200,13 +200,17 @@
                 <Label Content="Identi:"  Style="{StaticResource SectionLabel}" HorizontalAlignment="Right" Margin="0,272,561,0" VerticalAlignment="Top" Height="26" Width="91"/>
 
                 <!-- Scan canvas (unchanged layout) -->
-                <Canvas Name="ScanCanvas" Margin="10,298,652,71">
+                <Canvas Name="ScanCanvas" Margin="4,278,658,91">
                     <TextBox Name="BarCodeTextBox" FontSize="22" Height="35" Width="196" TextWrapping="Wrap" TextAlignment="Center" Text=""
                              Canvas.Top="32" KeyDown="BarCodeTextBox_KeyDown" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="10"/>
                     <Label Content="Unos bar koda:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Height="27" Width="128" Canvas.Left="61"/>
                     <TextBox x:Name="KolicinaBarKodTextBox" IsEnabled="False" KeyDown="KolicinaBarKod_KeyDown" Canvas.Left="224" FontSize="22" TextWrapping="Wrap" Text=""
                              Canvas.Top="32" Width="60" HorizontalAlignment="Left" Height="35" VerticalAlignment="Center"/>
                     <Label Name="KolicineLabel" Content="Količina:" FontWeight="Bold" Canvas.Left="224" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="2"/>
+
+                    <!-- Kolicina Label -->
+                    <Label Name="LastScannedArticleLabel" Content="-" Canvas.Left="10" Canvas.Top="87" RenderTransformOrigin="-0.76,-0.451" Height="26" Width="289" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="12" FontWeight="Bold" />
+                    <Label Content="Poslednje skenirani proizvod:" Canvas.Left="10" Canvas.Top="67" HorizontalAlignment="Left" Height="25" VerticalAlignment="Center" Width="174" FontSize="12"/>
                 </Canvas>
 
                 <!-- Save/Finish canvas (unchanged layout) -->
@@ -216,26 +220,26 @@
                             Style="{StaticResource ButtonSecondary}"
                             FontSize="13"
                             Canvas.Left="23"
-                            HorizontalAlignment="Left"
+                            HorizontalAlignment="Center"
                             VerticalAlignment="Top"
                             Height="51"
                             Width="226"
-                            Click="SnimiZaNaknadniZavrsetakButton_Click"/>
+                            Click="SnimiZaNaknadniZavrsetakButton_Click" Canvas.Top="10"/>
                     <Button Name="ZavrsetakButton"
                             Content="Završetak"
                             Style="{StaticResource ButtonPrimary}"
                             FontSize="16"
                             Canvas.Left="23"
-                            Canvas.Top="75"
+                            Canvas.Top="82"
                             Height="51"
                             Width="226"
-                            HorizontalAlignment="Left"
+                            HorizontalAlignment="Center"
                             VerticalAlignment="Top"
                             Click="ZavrsetakButton_Click"/>
                 </Canvas>
 
                 <!-- Filters canvas (unchanged layout) -->
-                <Canvas x:Name="FiltersCanvas" Margin="16,51,676,183" Background="#71bbd4">
+                <Canvas x:Name="FiltersCanvas" Margin="14,41,678,193" Background="#71bbd4">
                     <Label Content="Filteri:" FontWeight="Bold" FontSize="16" Height="37" Width="68" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="100"/>
                     <Label Content="Broj fakture:" Height="26" Width="75" HorizontalAlignment="Center" Canvas.Top="42" VerticalAlignment="Top" Canvas.Left="10"/>
                     <ComboBox x:Name="BrojeviFaktureComboBox" Width="126" SelectionChanged="BrojeviFaktureComboBox_SelectionChanged" Height="22" HorizontalAlignment="Center" Canvas.Left="131" Canvas.Top="44" VerticalAlignment="Top"/>
