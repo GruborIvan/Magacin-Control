@@ -5,25 +5,218 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Autentifikacija korisnika"
-        Height="550" Width="440">
-    <Border Background="LightBlue">
-        <Viewbox>
-            <Grid Height="450" Width="400">
-                <Label Content="Log In" HorizontalAlignment="Center" FontSize="32" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Height="54" Width="285"/>
-                <Canvas Margin="1,69,-1,-17">
-                    <Label Content="Korisničko ime:" FontSize="18" Height="35" Canvas.Left="129" Canvas.Top="49" VerticalAlignment="Center" Width="160" HorizontalAlignment="Left"/>
-                    <TextBox x:Name="UserBox" FontSize="22" TextWrapping="NoWrap" Height="33" Canvas.Left="109" Canvas.Top="89" VerticalAlignment="Center" Width="182" HorizontalAlignment="Left"/>
-                    <Label Content="Lozinka:" FontSize="18" Height="30" Canvas.Left="161" Canvas.Top="169" VerticalAlignment="Center" Width="96" HorizontalAlignment="Left"/>
-                    <PasswordBox x:Name="PassBox" FontSize="22" Height="33" Foreground="DarkBlue" Canvas.Left="109" Canvas.Top="204" VerticalAlignment="Center" Width="182" HorizontalAlignment="Left" />
-                    <Button x:Name="LoginButton" Background="#dde4df" IsDefault="True" Content="Prijavite se" FontSize="18" Height="41" Click="LoginButton_Click" Width="128" HorizontalAlignment="Left" Canvas.Left="136" Canvas.Top="299" VerticalAlignment="Top">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                </Canvas>
-            </Grid>
-        </Viewbox>
-    </Border>
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource WindowBackgroundBrush}">
+
+    <Window.Resources>
+        <!-- Background Gradient -->
+        <LinearGradientBrush x:Key="WindowBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#1F2A44" Offset="0"/>
+            <GradientStop Color="#2E3B55" Offset="0.45"/>
+            <GradientStop Color="#4A637D" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Shadow -->
+        <DropShadowEffect x:Key="CardShadow"
+                          Color="Black"
+                          Opacity="0.30"
+                          BlurRadius="18"
+                          ShadowDepth="6"/>
+
+        <!-- Text styles -->
+        <Style x:Key="TitleText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#1F2A44"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="HintText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+        </Style>
+
+        <Style x:Key="LabelText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="Margin" Value="0,14,0,6"/>
+        </Style>
+
+        <!-- Input container (rounded border) -->
+        <Style x:Key="InputBorder" TargetType="Border">
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,10"/>
+        </Style>
+
+        <!-- TextBox/PasswordBox styling -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="PasswordBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
+        <!-- Primary button -->
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#0078D7"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,22,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="12">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#005FA8"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.65"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Subtle overlay / glow -->
+        <Rectangle Opacity="0.10" IsHitTestVisible="False">
+            <Rectangle.Fill>
+                <RadialGradientBrush Center="0.2,0.2"
+                                     GradientOrigin="0.2,0.2"
+                                     RadiusX="0.9"
+                                     RadiusY="0.9">
+                    <GradientStop Color="White" Offset="0"/>
+                    <GradientStop Color="Transparent" Offset="1"/>
+                </RadialGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <!-- Main layout (two centered halves) -->
+        <Grid Margin="40">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <!-- left outer space -->
+                <ColumnDefinition Width="460"/>
+                <!-- left content lane -->
+                <ColumnDefinition Width="80"/>
+                <!-- center gap -->
+                <ColumnDefinition Width="520"/>
+                <!-- right content lane -->
+                <ColumnDefinition Width="*"/>
+                <!-- right outer space -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: Branding/info centered in its half -->
+            <StackPanel Grid.Column="1"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        MaxWidth="460">
+                <TextBlock Text="Magacin Control"
+                           FontSize="40"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           TextAlignment="Center"/>
+
+                <TextBlock Text="Prijavite se da nastavite sa radom"
+                           Margin="0,12,0,0"
+                           FontSize="16"
+                           Foreground="#DCE6F2"
+                           TextAlignment="Center"/>
+
+                <!-- Optional extra info card (remove if you want it cleaner) -->
+            </StackPanel>
+
+            <!-- Right: Login card centered in its half -->
+            <Border Grid.Column="3"
+                    Background="White"
+                    CornerRadius="18"
+                    Padding="34"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Width="520"
+                    Effect="{StaticResource CardShadow}">
+                <StackPanel>
+                    <TextBlock Text="Log in"
+                               Style="{StaticResource TitleText}"
+                               Margin="0,8,0,6"/>
+
+                    <TextBlock Text="Unesite korisničko ime i lozinku"
+                               Style="{StaticResource HintText}"
+                               TextAlignment="Center"
+                               Margin="0,0,0,18"/>
+
+                    <TextBlock Text="Korisničko ime" Style="{StaticResource LabelText}"/>
+                    <Border Style="{StaticResource InputBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0"
+                                       FontFamily="Segoe MDL2 Assets"
+                                       Text="&#xE77B;"
+                                       Foreground="#9CA3AF"
+                                       Margin="0,0,10,0"
+                                       VerticalAlignment="Center"/>
+
+                            <TextBox x:Name="UserBox"
+                                     Grid.Column="1"
+                                     Height="28"
+                                     TextWrapping="NoWrap"/>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Text="Lozinka" Style="{StaticResource LabelText}"/>
+                    <Border Style="{StaticResource InputBorder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0"
+                                       FontFamily="Segoe MDL2 Assets"
+                                       Text="&#xE72E;"
+                                       Foreground="#9CA3AF"
+                                       Margin="0,0,10,0"
+                                       VerticalAlignment="Center"/>
+
+                            <PasswordBox x:Name="PassBox"
+                                         Grid.Column="1"
+                                         Height="28"/>
+                        </Grid>
+                    </Border>
+
+                    <Button x:Name="LoginButton"
+                            Content="Prijavite se"
+                            IsDefault="True"
+                            Click="LoginButton_Click"
+                            Style="{StaticResource PrimaryButton}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
 </Window>
