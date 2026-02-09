@@ -60,7 +60,6 @@ namespace CSS_MagacinControl_App.Parsers
                                         .Where(x => x.Count > 1)
                                         .ToList();
 
-                // Handle error in file.
                 if (brojPonavljanjaIstogIdenta.Count > 0)
                 {
                     _dialogHandler.GetBarcodeAlreadyAssignedToIdentDialog(brojPonavljanjaIstogIdenta);
@@ -80,6 +79,7 @@ namespace CSS_MagacinControl_App.Parsers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 _dialogHandler.GetErrorWhileLoadingFilesDialog();
                 return null;
             }

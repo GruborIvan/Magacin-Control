@@ -99,7 +99,7 @@
                 <DataGrid Name="FaktureGrid"
                           Height="175"
                           HorizontalAlignment="Left"
-                          MouseDoubleClick="FaktureGrid_MouseDoubleClick"
+                          MouseDoubleClick="FaktureGrid_OnMouseDoubleClick"
                           IsReadOnly="True"
                           ColumnWidth="*"
                           Margin="308,35,0,0"
@@ -136,11 +136,36 @@
                           AutoGenerateColumns="False"
                           Grid.ColumnSpan="2">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Sifra identa" Width="3*" SortMemberPath="SifraIdenta"   Binding="{Binding SifraIdenta}"         HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Naziv identa" Width="10*" SortMemberPath="SifraIdenta"  Binding="{Binding NazivIdenta}"         HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Kolicina sa fakture" Width="4.5*" SortMemberPath="SifraIdenta" Binding="{Binding KolicinaSaFakture}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Pripremljena kolicina" Width="5*" SortMemberPath="SifraIdenta"  Binding="{Binding PripremljenaKolicina}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
-                        <DataGridTextColumn Header="Razlika" Width="3*" SortMemberPath="SifraIdenta" Binding="{Binding Razlika}"              HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                        <DataGridTextColumn 
+                            Header="Sifra identa"
+                            Width="3*"
+                            SortMemberPath="SifraIdenta"
+                            Binding="{Binding SifraIdenta}"
+                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+
+                        <DataGridTextColumn Header="Naziv identa"
+                            Width="10*"
+                            SortMemberPath="NazivIdenta"
+                            Binding="{Binding NazivIdenta}"
+                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+
+                        <DataGridTextColumn Header="Kolicina sa fakture"
+                            Width="4.5*"
+                            SortMemberPath="KolicinaSaFakture"
+                            Binding="{Binding KolicinaSaFakture}"
+                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+
+                        <DataGridTextColumn Header="Pripremljena kolicina"
+                            Width="5*"
+                            SortMemberPath="PripremljenaKolicina"
+                            Binding="{Binding PripremljenaKolicina}"
+                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+
+                        <DataGridTextColumn Header="Razlika"
+                            Width="3*"
+                            SortMemberPath="Razlika"
+                            Binding="{Binding Razlika}"
+                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
                     </DataGrid.Columns>
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
@@ -202,9 +227,9 @@
                 <!-- Scan canvas (unchanged layout) -->
                 <Canvas Name="ScanCanvas" Margin="4,278,658,91">
                     <TextBox Name="BarCodeTextBox" FontSize="22" Height="35" Width="196" TextWrapping="Wrap" TextAlignment="Center" Text=""
-                             Canvas.Top="32" KeyDown="BarCodeTextBox_KeyDown" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="10"/>
+                             Canvas.Top="32" KeyDown="BarCodeScan_KeyDown" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="10"/>
                     <Label Content="Unos bar koda:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Height="27" Width="128" Canvas.Left="61"/>
-                    <TextBox x:Name="KolicinaBarKodTextBox" IsEnabled="False" KeyDown="KolicinaBarKod_KeyDown" Canvas.Left="224" FontSize="22" TextWrapping="Wrap" Text=""
+                    <TextBox x:Name="KolicinaBarKodTextBox" IsEnabled="False" KeyDown="BarCodeScan_WithAmount_KeyDown" Canvas.Left="224" FontSize="22" TextWrapping="Wrap" Text=""
                              Canvas.Top="32" Width="60" HorizontalAlignment="Left" Height="35" VerticalAlignment="Center"/>
                     <Label Name="KolicineLabel" Content="Količina:" FontWeight="Bold" Canvas.Left="224" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="2"/>
 
@@ -242,7 +267,7 @@
                 <Canvas x:Name="FiltersCanvas" Margin="14,41,678,193" Background="#71bbd4">
                     <Label Content="Filteri:" FontWeight="Bold" FontSize="16" Height="37" Width="68" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="100"/>
                     <Label Content="Broj fakture:" Height="26" Width="75" HorizontalAlignment="Center" Canvas.Top="42" VerticalAlignment="Top" Canvas.Left="10"/>
-                    <ComboBox x:Name="BrojeviFaktureComboBox" Width="126" SelectionChanged="BrojeviFaktureComboBox_SelectionChanged" Height="22" HorizontalAlignment="Center" Canvas.Left="131" Canvas.Top="44" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="BrojeviFaktureComboBox" Width="126" SelectionChanged="BrojeviFaktureDropdown_SelectionChanged" Height="22" HorizontalAlignment="Center" Canvas.Left="131" Canvas.Top="44" VerticalAlignment="Top"/>
                     <Label Content="Datum:" Height="26" Width="48" HorizontalAlignment="Center" Canvas.Top="83" VerticalAlignment="Top" Canvas.Left="13"/>
                     <DatePicker x:Name="DatePickerFilter" Width="126" Height="24" HorizontalAlignment="Left" Canvas.Left="131" Canvas.Top="83" VerticalAlignment="Top"/>
                     <Label Content="Status:" Height="26" Width="45" HorizontalAlignment="Left" Canvas.Left="13" Canvas.Top="127" VerticalAlignment="Top"/>

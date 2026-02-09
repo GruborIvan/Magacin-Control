@@ -1,4 +1,5 @@
 ﻿using CSS_MagacinControl_App.ViewModels;
+using CSS_PA_Otprema.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -38,10 +39,10 @@ namespace CSS_MagacinControl_App.Dialog
         }
 
         // Pokretanje - Nije moguće uspostaviti vezu sa bazom podataka!
-        public MessageBoxResult GetDatabaseNotAccessibleDialog()
+        public MessageBoxResult GetDatabaseNotAccessibleDialog(string ex)
         {
             return MessageBox.Show(
-                messageBoxText: $" Nije moguće uspostaviti vezu sa bazom podataka!\n Proverite kredencijale i pokušajte ponovo!",
+                messageBoxText: $" Nije moguće uspostaviti vezu sa bazom podataka!\n Proverite kredencijale i pokušajte ponovo\n \n {ex}",
                 caption: "Greška prilikom konekcije!",
                 button: MessageBoxButton.OK,
                 icon: MessageBoxImage.Error,
@@ -124,15 +125,10 @@ namespace CSS_MagacinControl_App.Dialog
         }
 
         // Barcode scan - WRONG CODE
-        public MessageBoxResult GetWrongBarCodeDialog()
+        public void GetWrongBarCodeDialog(Window window)
         {
-            return MessageBox.Show(
-                messageBoxText: "Skenirani bar kod ne odgovara nijednoj stavci.",
-                caption: "Greška",
-                button: MessageBoxButton.OK,
-                icon: MessageBoxImage.Error,
-                defaultResult: MessageBoxResult.Yes
-            );
+            var customErrorDialog = new CustomErrorDialog(window, "Skenirani bar kod ne odgovara nijednoj stavci!", "Skenirani bar kod ne odgovara nijednoj stavci, pokusajte da skenirate drugi proizvod.");
+            customErrorDialog.ShowDialog();
         }
 
         // Pogresan broj fajlova ucitano.. Moguce 1 ili 3.
@@ -194,17 +190,6 @@ namespace CSS_MagacinControl_App.Dialog
             );
         }
 
-        public MessageBoxResult GetPrimljenaKolicina_VecaOd_Fakturisane()
-        {
-            return MessageBox.Show(
-                messageBoxText: " Pripremljena količina je veća od količine sa fakture. \n Upakovano je već koliko je potrebno.",
-                caption: "Greška prilikom skeniranja!",
-                button: MessageBoxButton.OK,
-                icon: MessageBoxImage.Warning,
-                defaultResult: MessageBoxResult.Yes
-            );
-        }
-
         // Kad korisnik uspesno promeni lozinku naloga.
         public MessageBoxResult GetUspesnoPromenjenaLozinkaKorisnikaDialog()
         {
@@ -216,6 +201,8 @@ namespace CSS_MagacinControl_App.Dialog
                 defaultResult: MessageBoxResult.Yes
             );
         }
+
+        #region SAVE_PROGRESS
 
         // Kad korisnik uspesno snimi zavrsetak.
         public MessageBoxResult GetUspesnoSnimljenoZaZavrsetakDialog(string brojFakture)
@@ -240,5 +227,7 @@ namespace CSS_MagacinControl_App.Dialog
                 defaultResult: MessageBoxResult.Yes
             );
         }
+
+        #endregion
     }
 }

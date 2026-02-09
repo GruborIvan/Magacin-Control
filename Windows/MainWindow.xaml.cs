@@ -2,6 +2,7 @@
 using CSS_MagacinControl_App.Interfaces;
 using CSS_MagacinControl_App.Models;
 using CSS_MagacinControl_App.ViewModels;
+using CSS_PA_Otprema.Windows;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace CSS_MagacinControl_App
         private readonly IRobaService _robaService;
         private readonly IFileParser _fileParser;
         private readonly IAuthenticationRepository _authenticationRepository;
-        private DialogHandler dialogHandler;
+        private DialogHandler _dialogHandler;
 
         private AuthenticationWindow _authenticationWindow;
         private AdminWindow _adminWindow;
@@ -43,7 +44,7 @@ namespace CSS_MagacinControl_App
             _authenticationWindow = authWindow;
             _authenticationRepository = authenticationRepository;
             _adminWindow = new AdminWindow(_isAdminWindowOpen, _authenticationRepository);
-            dialogHandler = new DialogHandler();
+            _dialogHandler = new DialogHandler();
 
             _identTrackViewModel = new IdentTrackViewModel()
             {
@@ -52,50 +53,44 @@ namespace CSS_MagacinControl_App
                 BarcodeToIdentDictionary = new Dictionary<string, string>()
             };
 
-            SetupMainWindowScreen();
+            InitializeAsync();
         }
 
-        private async Task SetupMainWindowScreen()
+        #region SCREEN INITIALIZATION & SETUP
+
+        private async Task InitializeAsync()
         {
-            // Setup admin button visibility.
             Adjust_AdminButtonVisibility();
+            InitializeStatusComboBox();
 
-            // Status filter ComboBox
-            StatusComboBox.SelectedValue = _nonSelectedDropdownValue;
-            StatusComboBox.ItemsSource = new List<string>() { _nonSelectedDropdownValue ,"U radu", "Završeno" };
-
-            await PullMainScreenData(); 
-        }
-
-        private async Task PullMainScreenData()
-        {
             DatePickerFilter.SelectedDate = DateTime.UtcNow;
+
             var filters = Load_SelectedFilters();
 
             var result = await _robaService.GetFilteredFaktureAsync(filters);
 
-            Setup_BrojeviFakturaCombobox(result.FaktureViewModel);
+            Setup_BrojeviFakturaDropdown(result.FaktureViewModel);
             ChangeCurrentState(result);
         }
 
-        private async void BrojeviFaktureComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void InitializeStatusComboBox()
         {
-            // Check if we have prevented the handler from executing.
-            if (!_shouldExecuteBrojFakture)
-                return;
-
-            var filters = Load_SelectedFilters();
-            
-            filters.BrojFakture = (sender as ComboBox).SelectedItem as string;
-
-            if (filters.BrojFakture == "--")
-                filters.BrojFakture = String.Empty;
-
-
-            var result = await _robaService.GetFilteredFaktureAsync(filters);
-
-            ChangeCurrentState(result);
+            StatusComboBox.SelectedValue = _nonSelectedDropdownValue;
+            StatusComboBox.ItemsSource = new List<string> { _nonSelectedDropdownValue, "U radu", "Završeno" };
         }
+
+        private void Setup_BrojeviFakturaDropdown(List<FaktureViewModel> fakture)
+        {
+            var brojeviFaktura = new List<string>() { _nonSelectedDropdownValue };
+            brojeviFaktura.AddRange(fakture.Select(x => x.BrojFakture));
+            BrojeviFaktureComboBox.ItemsSource = brojeviFaktura;
+
+            UkupnoFakturaLabel.Content = fakture.Count;
+        }
+
+        #endregion
+
+        #region FILE_LOADING
 
         private async void UcitajButton_Click(object sender, RoutedEventArgs e)
         {
@@ -116,18 +111,17 @@ namespace CSS_MagacinControl_App
 
                 if (await _robaService.CheckIfFakturaExists(csvDataViewModel.FaktureViewModel.First().BrojFakture))
                 {
-                    dialogHandler.GetFakturaAlreadyExistDialog();
+                    _dialogHandler.GetFakturaAlreadyExistDialog();
                     return;
                 }
 
                 ClearFilters();
-                ChangeCurrentState(csvDataViewModel); // Change the new state on the screen.
+                ChangeCurrentState(csvDataViewModel);
                 
-                // Set brojFakture dropbox
                 var brojFakture = csvDataViewModel.FaktureViewModel.First().BrojFakture;
 
                 FileNameTextBox.Text = brojFakture;
-                BarCodeTextBox.Focus();
+                FocusOnBarCodeScanTextBox();
             }
         }
 
@@ -147,32 +141,9 @@ namespace CSS_MagacinControl_App
             return (dialog, result ?? false);
         }
 
-        private async void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            await SnimiZaNaknadniZavrsetak(false);
+        #endregion
 
-            var result = dialogHandler.GetLogOutDialog();
-
-            if (result == MessageBoxResult.Yes)
-            {
-                App.Current.Properties["Username"] = String.Empty;
-                _authenticationWindow.Show();
-                _authenticationWindow.UserBox.Clear();
-                _authenticationWindow.PassBox.Clear();
-                _authenticationWindow.UserBox.Focus();
-                this.Hide();
-            }
-        }
-
-        private void AdminPreferencesButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_adminWindow.IsOpen)
-                return;
-
-            // Open admin preferences window.
-            _adminWindow = new AdminWindow(true, _authenticationRepository);
-            _adminWindow.Show();
-        }
+        #region FILTERS
 
         private async void FilterButton_Click(object sender, RoutedEventArgs e)
         {
@@ -188,7 +159,7 @@ namespace CSS_MagacinControl_App
 
             ChangeCurrentState(result);
 
-            Setup_BrojeviFakturaCombobox(result.FaktureViewModel);
+            Setup_BrojeviFakturaDropdown(result.FaktureViewModel);
         }
 
         private async void RemoveFilterButton_Click(object sender, RoutedEventArgs e)
@@ -210,21 +181,25 @@ namespace CSS_MagacinControl_App
 
             ChangeCurrentState(result);
 
-            Setup_BrojeviFakturaCombobox(result.FaktureViewModel);
+            Setup_BrojeviFakturaDropdown(result.FaktureViewModel);
         }
 
-        private void Adjust_AdminButtonVisibility()
+        private async void BrojeviFaktureDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            bool isAdmin = (bool)App.Current.Properties["IsAdmin"];
+            if (!_shouldExecuteBrojFakture)
+                return;
 
-            if (isAdmin)
-            {
-                AdminPreferencesButton.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                AdminPreferencesButton.Visibility = Visibility.Hidden;
-            }
+            var filters = Load_SelectedFilters();
+
+            filters.BrojFakture = (sender as ComboBox).SelectedItem as string;
+
+            if (filters.BrojFakture == "--")
+                filters.BrojFakture = String.Empty;
+
+
+            var result = await _robaService.GetFilteredFaktureAsync(filters);
+
+            ChangeCurrentState(result);
         }
 
         private FilterModel Load_SelectedFilters()
@@ -236,7 +211,19 @@ namespace CSS_MagacinControl_App
             };
         }
 
-        private void FaktureGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ClearFilters()
+        {
+            _shouldExecuteBrojFakture = false;
+            BrojeviFaktureComboBox.Text = "--";
+            _shouldExecuteBrojFakture = true;
+
+            DatePickerFilter.Text = String.Empty;
+            StatusComboBox.Text = "--";
+        }
+
+        #endregion
+
+        private void FaktureGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             DataGrid grid = sender as DataGrid;
 
@@ -271,7 +258,7 @@ namespace CSS_MagacinControl_App
                 {
                     ScanCanvas.Visibility = Visibility.Visible;
                     SnimiEndCanvas.Visibility = Visibility.Visible;
-                    BarCodeTextBox.Focus();
+                    FocusOnBarCodeScanTextBox();
                     return;
                 }
             }
@@ -281,16 +268,7 @@ namespace CSS_MagacinControl_App
             IzvozUCsvButton.Visibility = Visibility.Hidden;
         }
 
-        private void Setup_BrojeviFakturaCombobox(List<FaktureViewModel> fakture)
-        {
-            // Setup brojevi faktura dropdown.
-            var brojeviFaktura = new List<string>() { _nonSelectedDropdownValue };
-            brojeviFaktura.AddRange(fakture.Select(x => x.BrojFakture));
-            BrojeviFaktureComboBox.ItemsSource = brojeviFaktura;
-
-            // Setup broj faktura label
-            UkupnoFakturaLabel.Content = fakture.Count;
-        }
+        #region SAVE_PROGRESS
 
         private async void ZavrsetakButton_Click(object sender, RoutedEventArgs e)
         {
@@ -299,17 +277,17 @@ namespace CSS_MagacinControl_App
 
             if (unscannedIdents.Count != 0)
             {
-                dialogHandler.GetNotAllIdentsScannedDialog(unscannedIdents);
+                _dialogHandler.GetNotAllIdentsScannedDialog(unscannedIdents);
                 ZavrsetakButton.IsEnabled = true;
+                FocusOnBarCodeScanTextBox();
                 return;
             }
 
-            var selectedFaktura = _identTrackViewModel.FaktureState.First(); // Get selected faktura
-            await _robaService.SaveFakturaAndItemsAsync(_identTrackViewModel); // Save faktura and items to database.
+            var selectedFaktura = _identTrackViewModel.FaktureState.First(); 
+            await _robaService.SaveFakturaAndItemsAsync(_identTrackViewModel); 
 
-            await _robaService.ChangeFakturaStatusToDoneAsync(selectedFaktura.BrojFakture); // Change status of faktura to 'Done'.
+            await _robaService.ChangeFakturaStatusToDoneAsync(selectedFaktura.BrojFakture);
 
-            // REFRESH THE VIEW..
             BrojeviFaktureComboBox.SelectedItem = selectedFaktura.BrojFakture;
 
             var filters = Load_SelectedFilters();
@@ -318,8 +296,10 @@ namespace CSS_MagacinControl_App
             var result = await _robaService.GetFilteredFaktureAsync(filters);
 
             ChangeCurrentState(result);
-            dialogHandler.GetUspesnoSnimljenoZaZavrsetakDialog(selectedFaktura.BrojFakture);
+            _dialogHandler.GetUspesnoSnimljenoZaZavrsetakDialog(selectedFaktura.BrojFakture);
 
+            BarCodeTextBox.Text = string.Empty;
+            RemoveLastScannedArticleLabel();
             ZavrsetakButton.IsEnabled = true;
         }
 
@@ -330,7 +310,6 @@ namespace CSS_MagacinControl_App
 
             var filters = Load_SelectedFilters();
 
-            // REFRESH THE VIEW..
             if (_identTrackViewModel.FaktureState.Any())
             {
                 var selectedFaktura = _identTrackViewModel.FaktureState.First();
@@ -348,9 +327,10 @@ namespace CSS_MagacinControl_App
 
             if (isUserClicked)
             {
-                dialogHandler.GetUspesnoSnimljenoZaNaknadniZavrsetakDialog(_identTrackViewModel.FaktureState.First().BrojFakture);
+                _dialogHandler.GetUspesnoSnimljenoZaNaknadniZavrsetakDialog(_identTrackViewModel.FaktureState.First().BrojFakture);
             }
 
+            RemoveLastScannedArticleLabel();
             SnimiZaNaknadniZavrsetakButton.IsEnabled = true;
         }
 
@@ -359,21 +339,211 @@ namespace CSS_MagacinControl_App
             await SnimiZaNaknadniZavrsetak(isUserClicked: true);
         }
 
+        private void RemoveLastScannedArticleLabel()
+        {
+            LastScannedArticleLabel.Content = string.Empty;
+        }
+
+        #endregion
+
+        #region BARCODE_SCAN
+
+        private async void BarCodeScan_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter)
+                return;
+
+            if (!TryGetScanContext(out var barCode, out var brojFakture, out _))
+                return;
+
+            if (!TryProcessScannedAmounts(barCode, brojFakture, 1))
+                return;
+
+            ShowLastScannedArticle(barCode, brojFakture);
+            await FlashRowAsync(barCode, brojFakture);
+        }
+
+        private async void BarCodeScan_WithAmount_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter) 
+                return;
+
+            if (!int.TryParse(KolicinaBarKodTextBox.Text, out int kolicina))
+            {
+                KolicinaBarKodTextBox.Text = string.Empty;
+                return;
+            }
+
+            if (!TryGetScanContext(out var barCode, out var brojFakture, out _))
+                return;
+
+            if (TryProcessScannedAmounts(barCode, brojFakture, kolicina))
+            {
+                ShowLastScannedArticle(barCode, brojFakture, kolicina);
+                await FlashRowAsync(barCode, brojFakture);
+            }
+
+            KolicinaBarKodTextBox.Text = string.Empty;
+            KolicinaBarKodTextBox.IsEnabled = false;
+        }
+
+        private bool TryGetScanContext(out string barCode, out string brojFakture, out IdentiViewModel scannedIdent)
+        {
+            barCode = BarCodeTextBox.Text;
+            brojFakture = _identTrackViewModel.FaktureState.First().BrojFakture;
+
+            if (!TryGetIdentByBarCode(barCode, brojFakture, out scannedIdent))
+            {
+                _dialogHandler.GetWrongBarCodeDialog(this);
+                BarCodeTextBox.Text = string.Empty;
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool TryGetIdentByBarCode(string barCode, string brojFakture, out IdentiViewModel scannedIdent)
+        {
+            scannedIdent = null;
+
+            if (!_identTrackViewModel.BarcodeToIdentDictionary.TryGetValue(barCode, out var sifraIdenta))
+                return false;
+
+            scannedIdent = _identTrackViewModel.IdentState
+                .FirstOrDefault(x => x.SifraIdenta == sifraIdenta && x.BrojFakture == brojFakture);
+
+            return scannedIdent != null;
+        }
+
+        private bool TryProcessScannedAmounts(string barCode, string brojFakture, int kolicina)
+        {
+            if (!TryGetIdentByBarCode(barCode, brojFakture, out var scannedIdent))
+            {
+                _dialogHandler.GetWrongBarCodeDialog(this);
+
+                BarCodeTextBox.Text = string.Empty;
+                return false;
+            }
+
+            if (scannedIdent.Oznaka == -1 && String.IsNullOrEmpty(KolicinaBarKodTextBox.Text))
+            {
+                KolicinaBarKodTextBox.IsEnabled = true;
+                KolicinaBarKodTextBox.Focus();
+                return false;
+            }
+
+            if (scannedIdent.PripremljenaKolicina + kolicina > scannedIdent.KolicinaSaFakture)
+            {
+                var customErrorDialog = new CustomErrorDialog(this, "Greška prilikom skeniranja!", "Pripremljena količina je veća od količine sa fakture. \n Upakovano je već koliko je potrebno.");
+                customErrorDialog.ShowDialog();
+
+                BarCodeTextBox.Text = String.Empty;
+                FocusOnBarCodeScanTextBox();
+                return false;
+            }
+
+            scannedIdent.PripremljenaKolicina = scannedIdent.PripremljenaKolicina + kolicina;
+            scannedIdent.Razlika = scannedIdent.KolicinaSaFakture - scannedIdent.PripremljenaKolicina;
+            BarCodeTextBox.Text = String.Empty;
+            FocusOnBarCodeScanTextBox();
+            return true;
+        }
+
+        private void FocusOnBarCodeScanTextBox()
+        {
+            BarCodeTextBox.Focus();
+        }
+
+        private async Task FlashRowAsync(string barCode, string brojFakture)
+        {
+            if (!TryGetIdentByBarCode(barCode, brojFakture, out var scannedIdent))
+            {
+                _dialogHandler.GetWrongBarCodeDialog(this);
+                BarCodeTextBox.Text = string.Empty;
+                return;
+            }
+
+            try
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    scannedIdent.IsRecentlyScanned = true;
+
+                    FaktureIdenti.UpdateLayout();
+                    FaktureIdenti.ScrollIntoView(scannedIdent);
+
+                    if (FaktureIdenti.ItemContainerGenerator.ContainerFromItem(scannedIdent) is DataGridRow row)
+                    {
+                        row.BringIntoView();
+                    }
+                });
+
+                await Task.Delay(2000);
+            }
+            finally
+            {
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    scannedIdent.IsRecentlyScanned = false;
+                });
+            }
+        }
+    
+        private void ShowLastScannedArticle(string barCode, string brojFakture, int kolicina = 1)
+        {
+            if (!TryGetIdentByBarCode(barCode, brojFakture, out var scannedIdent))
+                return;
+
+            var scannedArticleTextToDisplay = $"{scannedIdent.NazivIdenta}   Kolicina: {kolicina}";
+            LastScannedArticleLabel.Content = scannedArticleTextToDisplay;
+        }
+
+        #endregion
+
+        #region AUTHENTICATION
+
+        private async void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SnimiZaNaknadniZavrsetak(false);
+
+            var result = _dialogHandler.GetLogOutDialog();
+
+            if (result == MessageBoxResult.Yes)
+            {
+                App.Current.Properties["Username"] = String.Empty;
+                _authenticationWindow.Show();
+                _authenticationWindow.UserBox.Clear();
+                _authenticationWindow.PassBox.Clear();
+                _authenticationWindow.UserBox.Focus();
+                this.Hide();
+            }
+        }
+
+        private void AdminPreferencesButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_adminWindow.IsOpen)
+                return;
+
+            _adminWindow = new AdminWindow(true, _authenticationRepository);
+            _adminWindow.Show();
+        }
+
+        private void Adjust_AdminButtonVisibility()
+        {
+            bool isAdmin = (bool)App.Current.Properties["IsAdmin"];
+
+            AdminPreferencesButton.Visibility = isAdmin ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        #endregion
+
         private void IzvozUCsvButton_Click(object sender, RoutedEventArgs e)
         {
             var faktura = _identTrackViewModel.FaktureState.First();
 
             _fileParser.PackFaktureToCsvFile(faktura);
-        }
 
-        private void ClearFilters()
-        {
-            _shouldExecuteBrojFakture = false;  // Prevent from 'BrojeviFaktureComboBox_SelectionChanged' call.
-            BrojeviFaktureComboBox.Text = "--";
-            _shouldExecuteBrojFakture = true;
-
-            DatePickerFilter.Text = String.Empty;
-            StatusComboBox.Text = "--";
+            Application.Current.Shutdown();
         }
 
         protected override async void OnClosed(EventArgs e)
@@ -383,119 +553,6 @@ namespace CSS_MagacinControl_App
             await Task.Delay(10000);
             base.OnClosed(e);
             Application.Current.Shutdown();
-        }
-
-        private async void BarCodeTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                string barCode = BarCodeTextBox.Text;
-                string brojFakture = _identTrackViewModel.FaktureState.First().BrojFakture;
-
-                if (!_identTrackViewModel.BarcodeToIdentDictionary.ContainsKey(barCode))
-                {
-                    dialogHandler.GetWrongBarCodeDialog();
-                    BarCodeTextBox.Text = String.Empty;
-                    return;
-                }
-
-                CalculateScannedAmounts(barCode, brojFakture, 1);
-                ShowLastScannedArticle(barCode);
-                await FlashRowAsync(barCode, brojFakture);
-            }
-        }
-
-        private async void KolicinaBarKod_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.Enter) 
-                return;
-
-            if (!int.TryParse(KolicinaBarKodTextBox.Text, out int kolicina)) // Ucitavanje i validiranje kolicine.
-            {
-                KolicinaBarKodTextBox.Text = string.Empty;
-                return;
-            }
-
-            var barCode = BarCodeTextBox.Text;
-            string brojFakture = _identTrackViewModel.FaktureState.First().BrojFakture;
-            
-            CalculateScannedAmounts(barCode, brojFakture, kolicina);
-            ShowLastScannedArticle(barCode, kolicina);
-            await FlashRowAsync(barCode, brojFakture);
-
-            // Ovde je logika kad se ucita proizvod..
-            KolicinaBarKodTextBox.Text = string.Empty;
-            KolicinaBarKodTextBox.IsEnabled = false;
-        }
-
-        private void CalculateScannedAmounts(string barkod, string brojFakture, int kolicina)
-        {
-            string sifraIdenta = _identTrackViewModel.BarcodeToIdentDictionary[barkod];
-
-            var scannedIdent = _identTrackViewModel.IdentState
-                    .Where(x => x.SifraIdenta == sifraIdenta)
-                    .Where(x => x.BrojFakture == brojFakture)
-                    .FirstOrDefault();
-
-
-            if (scannedIdent != null)
-            {
-                if (scannedIdent.Oznaka == -1 && String.IsNullOrEmpty(KolicinaBarKodTextBox.Text))
-                {
-                    KolicinaBarKodTextBox.IsEnabled = true;
-                    KolicinaBarKodTextBox.Focus();
-                    return;
-                }
-
-                if (scannedIdent.PripremljenaKolicina + kolicina > scannedIdent.KolicinaSaFakture)
-                {
-                    dialogHandler.GetPrimljenaKolicina_VecaOd_Fakturisane();
-                    BarCodeTextBox.Text = String.Empty;
-                    return;
-                }
-
-                scannedIdent.PripremljenaKolicina = scannedIdent.PripremljenaKolicina + kolicina;
-                scannedIdent.Razlika = scannedIdent.KolicinaSaFakture - scannedIdent.PripremljenaKolicina;
-            }
-            else
-            {
-                dialogHandler.GetWrongBarCodeDialog();
-            }
-
-            BarCodeTextBox.Text = String.Empty;
-        }
-
-        private async Task FlashRowAsync(string barkod, string brojFakture)
-        {
-            string sifraIdenta = _identTrackViewModel.BarcodeToIdentDictionary[barkod];
-
-            var scannedIdent = _identTrackViewModel.IdentState
-                    .Where(x => x.SifraIdenta == sifraIdenta)
-                    .Where(x => x.BrojFakture == brojFakture)
-                    .FirstOrDefault();
-
-            if (scannedIdent == null) return;
-
-            scannedIdent.IsRecentlyScanned = true;
-
-            // Optional: bring it into view and/or select it
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                FaktureIdenti.UpdateLayout();
-                FaktureIdenti.ScrollIntoView(scannedIdent);
-                var row = (DataGridRow)FaktureIdenti.ItemContainerGenerator.ContainerFromItem(scannedIdent);
-                row?.BringIntoView();
-            });
-
-            await Task.Delay(2000);
-            scannedIdent.IsRecentlyScanned = false;
-        }
-    
-        private void ShowLastScannedArticle(string barCode, int kolicina = 1)
-        {
-            var scannedIdent = _identTrackViewModel.GetIdentByBarCode(barCode);
-            var scannedArticleTextToDisplay = $"{scannedIdent.NazivIdenta}   Kolicina: {kolicina}";
-            LastScannedArticleLabel.Content = scannedArticleTextToDisplay;
         }
     }
 }

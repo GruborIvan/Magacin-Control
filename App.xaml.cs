@@ -76,8 +76,6 @@ namespace CSS_MagacinControl_App
 
             try
             {
-                // Make sure that the database is up to date with migrations.
-                // Seed initial admin user to the system.
                 var dbContext = new AppDbContext();
                 dbContext.Database.Migrate();
                 DbInitializer.Initialize(dbContext);
@@ -88,9 +86,10 @@ namespace CSS_MagacinControl_App
 
                 base.OnStartup(e);
             }
-            catch (SqlException sqlEx)
+            catch (SqlException ex)
             {
-                new DialogHandler().GetDatabaseNotAccessibleDialog();
+                Console.Write(ex.ToString());
+                new DialogHandler().GetDatabaseNotAccessibleDialog(ex.Message);
                 Shutdown(1);
             }
         }

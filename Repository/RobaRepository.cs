@@ -165,8 +165,6 @@ namespace CSS_MagacinControl_App.Repository
 
         public async Task UpdateIdentiAsync(List<IdentiViewModel> identi, string brojFakture)
         {
-            // Pronaci idente u bazi po sifri identa i broju fakture.
-            // Samo te idente updateovati.
             using var _dbContext = await _dbContextFactory.CreateDbContextAsync();
             
             var identiListDbo = _mapper.Map<IEnumerable<IdentDbo>>(identi);
@@ -185,6 +183,7 @@ namespace CSS_MagacinControl_App.Repository
                 if (changedIdent != null)
                 {
                     ident.PrimljenaKolicina = changedIdent.PrimljenaKolicina;
+                    ident.Razlika = changedIdent.Razlika;
                     _dbContext.Entry(ident).State = EntityState.Modified;
                 }
             }
