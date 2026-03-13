@@ -4,6 +4,7 @@ using CSS_MagacinControl_App.Models;
 using CSS_MagacinControl_App.ViewModels;
 using CSS_PA_Otprema.Windows;
 using Microsoft.Win32;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,29 +23,30 @@ namespace CSS_MagacinControl_App
     {
         private readonly IRobaService _robaService;
         private readonly IFileParser _fileParser;
-        private readonly IAuthenticationRepository _authenticationRepository;
-        private DialogHandler _dialogHandler;
 
+        private readonly IServiceProvider _serviceProvider;
+
+        private DialogHandler _dialogHandler;
         private AuthenticationWindow _authenticationWindow;
         private AdminWindow _adminWindow;
 
         private readonly string _nonSelectedDropdownValue = "--";
 
-        private bool _isAdminWindowOpen = false;
         private bool _shouldExecuteBrojFakture = true;
 
         private readonly IdentTrackViewModel _identTrackViewModel;
 
-        public MainWindow(AuthenticationWindow authWindow, IRobaService robaService, IFileParser fileParser, IAuthenticationRepository authenticationRepository)
+        public MainWindow(IServiceProvider serviceProvider, IRobaService robaService, IFileParser fileParser)
         {
             InitializeComponent();
 
+            _serviceProvider = serviceProvider;
             _robaService = robaService;
             _fileParser = fileParser;
-            _authenticationWindow = authWindow;
-            _authenticationRepository = authenticationRepository;
-            _adminWindow = new AdminWindow(_isAdminWindowOpen, _authenticationRepository);
             _dialogHandler = new DialogHandler();
+
+            _adminWindow = null;
+            _authenticationWindow = null; // resolved from DI when needed
 
             _identTrackViewModel = new IdentTrackViewModel()
             {
@@ -53,7 +55,16 @@ namespace CSS_MagacinControl_App
                 BarcodeToIdentDictionary = new Dictionary<string, string>()
             };
 
-            InitializeAsync();
+            // Defer heavy initialization until the Window.Loaded event — allows WPF to finish constructing and rendering the window first.
+            this.Loaded += MainWindow_Loaded;
+        }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Unsubscribe to ensure initialization runs only once.
+            this.Loaded -= MainWindow_Loaded;
+
+            await InitializeAsync();
         }
 
         #region SCREEN INITIALIZATION & SETUP
@@ -511,6 +522,7 @@ namespace CSS_MagacinControl_App
             if (result == MessageBoxResult.Yes)
             {
                 App.Current.Properties["Username"] = String.Empty;
+                _authenticationWindow = _serviceProvider.GetService(typeof(AuthenticationWindow)) as AuthenticationWindow;
                 _authenticationWindow.Show();
                 _authenticationWindow.UserBox.Clear();
                 _authenticationWindow.PassBox.Clear();
@@ -521,10 +533,16 @@ namespace CSS_MagacinControl_App
 
         private void AdminPreferencesButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_adminWindow.IsOpen)
+            // If admin window already open, do nothing.  Check for null first.
+            if (_adminWindow != null && _adminWindow.IsOpen)
                 return;
 
-            _adminWindow = new AdminWindow(true, _authenticationRepository);
+            // Create AdminWindow via DI so its dependencies are resolved correctly (transient/lazy).
+            _adminWindow = ActivatorUtilities.CreateInstance<AdminWindow>(_serviceProvider, true);
+
+            // When admin window closes, clear the reference so a new one can be opened later.
+            _adminWindow.Closed += (s, args) => _adminWindow = null;
+
             _adminWindow.Show();
         }
 

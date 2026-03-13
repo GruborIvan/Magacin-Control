@@ -51,8 +51,8 @@ namespace CSS_MagacinControl_App
                         ServiceLifetime.Transient
                     );
 
-                    services.AddSingleton<AuthenticationWindow>();
-                    services.AddSingleton<MainWindow>();
+                    services.AddSingleton<AuthenticationWindow>(sp => ActivatorUtilities.CreateInstance<AuthenticationWindow>(sp));
+                    services.AddSingleton<MainWindow>(sp => ActivatorUtilities.CreateInstance<MainWindow>(sp));
 
                     services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
                     services.AddTransient<IRobaService, RobaService>();

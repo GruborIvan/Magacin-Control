@@ -1,5 +1,7 @@
 ﻿using CSS_MagacinControl_App.Dialog;
 using CSS_MagacinControl_App.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Windows;
 
 namespace CSS_MagacinControl_App
@@ -10,11 +12,13 @@ namespace CSS_MagacinControl_App
         private readonly IRobaService _robaService;
         private readonly IFileParser _fileParser;
         private readonly DialogHandler dialogHandler;
+        private readonly IServiceProvider _serviceProvider;
 
-        public AuthenticationWindow(IAuthenticationRepository authenticationRepository, IRobaService robaService, IFileParser fileParser)
+        public AuthenticationWindow(IServiceProvider serviceProvider, IAuthenticationRepository authenticationRepository, IRobaService robaService, IFileParser fileParser)
         {
             InitializeComponent();
 
+            _serviceProvider = serviceProvider;
             _authenticationRepository = authenticationRepository;
             _robaService = robaService;
             _fileParser = fileParser;
@@ -36,7 +40,8 @@ namespace CSS_MagacinControl_App
             {
                 App.Current.Properties["IsAdmin"] = isAdmin;
                 App.Current.Properties["Username"] = username;
-                MainWindow mainWindow = new MainWindow(this, _robaService, _fileParser, _authenticationRepository);
+
+                var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
                 mainWindow.WindowState = WindowState.Maximized;
                 mainWindow.Show();
                 this.Hide();
