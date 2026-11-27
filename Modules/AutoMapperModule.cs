@@ -29,7 +29,7 @@ namespace CSS_MagacinControl_App.Modules
                     .ForMember(x => x.Status, opt => opt.MapFrom(src => src.StatusFakture));
 
                 cfg.CreateMap<FaktureViewModel, FakturaDbo>()
-                    .ForMember(x => x.DatumFakture, opt => opt.MapFrom(src => DateTime.ParseExact(src.DatumFakture, "dd/MM/yyyy", CultureInfo.InvariantCulture)))
+                    .ForMember(x => x.DatumFakture, opt => opt.MapFrom(src => ParseDatum(src.DatumFakture)))
                     .ForMember(x => x.StatusFakture, opt => opt.MapFrom(src => src.Status))
                     .ForMember(x => x.RobaZaPakovanjeItems, opt => opt.Ignore());
 
@@ -49,6 +49,24 @@ namespace CSS_MagacinControl_App.Modules
 
             builder.RegisterInstance(config).As<IConfigurationProvider>().ExternallyOwned();
             builder.RegisterType<Mapper>().As<IMapper>();
+        }
+
+        // Helper used by AutoMapper expression to parse flexible date formats like "3/3/2026" or "03/03/2026".
+        private static DateTime ParseDatum(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return DateTime.MinValue;
+
+            var s = input.Trim();
+            var formats = new[] { "d/M/yyyy", "dd/MM/yyyy" };
+
+            if (DateTime.TryParseExact(s, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
+                return parsed;
+
+            if (DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsed))
+                return parsed;
+
+            return DateTime.MinValue;
         }
     }
 }
